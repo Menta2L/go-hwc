@@ -1,0 +1,332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "hardware/v1/hardware.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Hardware"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hardware/get": {
+      "post": {
+        "operationId": "Hardware_GetHardware",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetHardwareReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetHardwareRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Hardware"
+        ]
+      }
+    },
+    "/hardware/send": {
+      "post": {
+        "summary": "Sends a greeting",
+        "operationId": "Hardware_Send",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SendReply"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Hardware"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetHardwareRequestByHostname": {
+      "type": "object",
+      "properties": {
+        "Host": {
+          "type": "string"
+        }
+      }
+    },
+    "GetHardwareRequestByID": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Cpu": {
+      "type": "object",
+      "properties": {
+        "CPU": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "VendorID": {
+          "type": "string"
+        },
+        "Family": {
+          "type": "string"
+        },
+        "Model": {
+          "type": "string"
+        },
+        "ModelName": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DiskPartition": {
+      "type": "object",
+      "properties": {
+        "Device": {
+          "type": "string"
+        },
+        "Mountpoint": {
+          "type": "string"
+        },
+        "Fstype": {
+          "type": "string"
+        },
+        "Opts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetHardwareReply": {
+      "type": "object",
+      "properties": {
+        "Info": {
+          "$ref": "#/definitions/v1HardwareInfo"
+        }
+      }
+    },
+    "v1GetHardwareRequest": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "$ref": "#/definitions/GetHardwareRequestByID"
+        },
+        "Host": {
+          "$ref": "#/definitions/GetHardwareRequestByHostname"
+        }
+      },
+      "description": "Request."
+    },
+    "v1HardwareInfo": {
+      "type": "object",
+      "properties": {
+        "Host": {
+          "$ref": "#/definitions/v1Host"
+        },
+        "Memory": {
+          "$ref": "#/definitions/v1Memory"
+        },
+        "NetworkInterfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1NetworkInterfaces"
+          }
+        },
+        "DiskPartition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1DiskPartition"
+          }
+        },
+        "Netstat": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Netstat"
+          }
+        },
+        "Cpu": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Cpu"
+          }
+        }
+      }
+    },
+    "v1Host": {
+      "type": "object",
+      "properties": {
+        "Hostname": {
+          "type": "string"
+        },
+        "OS": {
+          "type": "string"
+        },
+        "Platform": {
+          "type": "string"
+        },
+        "PlatformFamily": {
+          "type": "string"
+        },
+        "PlatformVersion": {
+          "type": "string"
+        },
+        "KernelVersion": {
+          "type": "string"
+        },
+        "KernelArch": {
+          "type": "string"
+        },
+        "VirtualizationSystem": {
+          "type": "string"
+        },
+        "VirtualizationRole": {
+          "type": "string"
+        },
+        "HostID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Memory": {
+      "type": "object",
+      "properties": {
+        "Total": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "v1Netstat": {
+      "type": "object",
+      "properties": {
+        "Addr": {
+          "type": "string"
+        },
+        "Port": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "Proto": {
+          "type": "string"
+        },
+        "Process": {
+          "type": "string"
+        }
+      }
+    },
+    "v1NetworkInterfaces": {
+      "type": "object",
+      "properties": {
+        "Index": {
+          "type": "string",
+          "format": "int64"
+        },
+        "MTU": {
+          "type": "string",
+          "format": "int64"
+        },
+        "Name": {
+          "type": "string"
+        },
+        "HardwareAddr": {
+          "type": "string"
+        },
+        "Flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Addrs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1SendReply": {
+      "type": "object",
+      "title": "The response message containing the greetings"
+    },
+    "v1SendRequest": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "$ref": "#/definitions/v1HardwareInfo"
+        }
+      },
+      "description": "The request message containing the user's name."
+    }
+  }
+}

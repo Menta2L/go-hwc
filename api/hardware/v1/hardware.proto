@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package hardware.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/menta2l/go-hwc/api/hardware/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.hardware.v1";
+option java_outer_classname = "HardwareProtoV1";
+
+// The greeting service definition.
+service Hardware {
+  // Sends a greeting
+  rpc Send (SendRequest) returns (SendReply)  {
+    option (google.api.http).post = "/hardware/send";
+    option (google.api.http).body = "*";
+    }
+    rpc GetHardware (GetHardwareRequest) returns (GetHardwareReply)  {
+      option (google.api.http).post = "/hardware/get";
+      option (google.api.http).body = "*";
+  }
+}
+
+// The request message containing the user's name.
+message SendRequest {
+  HardwareInfo info = 1;
+}
+
+// The response message containing the greetings
+message SendReply {
+}
+// Request.
+message GetHardwareRequest {
+  message ByID {
+      string Id = 1;
+  }
+  message ByHostname {
+      string Host = 1;
+  }
+  // Different ways to get hardware info 
+  oneof filter {
+      ByID Id = 1;
+      ByHostname Host = 2;
+  }
+}
+message GetHardwareReply {
+  HardwareInfo Info =1;
+}
+message Memory {
+  uint64 Total =1;
+}
+
+message Host {
+  string Hostname             = 1;
+  string OS                   = 2;
+  string Platform             = 3;
+  string PlatformFamily       = 4;
+  string PlatformVersion      = 5;
+  string KernelVersion        = 6;
+  string KernelArch           = 7;
+  string VirtualizationSystem = 8;
+  string VirtualizationRole   = 9;
+  string HostID               = 10;
+}
+message Cpu { 
+  int32 CPU        = 1;
+  string VendorID  = 2;
+	string Family    = 3;
+	string Model     = 4;
+  string ModelName = 5;
+}
+message NetworkInterfaces {
+  int64 Index =1;
+	int64 MTU =2;
+	string Name =3;
+	string HardwareAddr =4;
+	repeated string Flags =5;
+	repeated string Addrs =6;
+}
+message  DiskPartition {
+	string Device =1;
+	string Mountpoint =2;
+	string Fstype =3;
+	repeated string Opts =4;
+}
+
+message  Netstat {
+  string Addr =1;
+  uint64 Port =2;
+  string Proto =3;
+  string Process =4;
+}
+message HardwareInfo {
+  Host Host =1;
+  Memory Memory =2;
+  repeated NetworkInterfaces NetworkInterfaces =3;
+  repeated DiskPartition DiskPartition =4;
+  repeated Netstat Netstat =5;
+  repeated Cpu Cpu =6;
+}

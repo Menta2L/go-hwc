@@ -1,0 +1,36 @@
+version: "3.8"
+
+volumes:
+  postgres:
+  pgadmin:
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-test@test.com}
+        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+        PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+        - pgadmin:/root/.pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+  postgres:
+    image: "postgres:12.6" # We're using 12.
+    container_name: "loki_postgres"
+    restart: "always"
+    shm_size: "256m"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: "hwc"
+      POSTGRES_USER: "hwc"
+      POSTGRES_DB: "hwc"
+volumes:
+ pgadmin:
+ postgres:
