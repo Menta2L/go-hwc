@@ -11,13 +11,14 @@ var (
 	// CpusColumns holds the columns for the "cpus" table.
 	CpusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "idx", Type: field.TypeInt},
 		{Name: "vendor_id", Type: field.TypeString},
 		{Name: "family", Type: field.TypeString},
 		{Name: "model", Type: field.TypeString},
 		{Name: "model_name", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "host_cpu_id", Type: field.TypeString, Nullable: true},
+		{Name: "host_cpu", Type: field.TypeString, Nullable: true},
 	}
 	// CpusTable holds the schema information for the "cpus" table.
 	CpusTable = &schema.Table{
@@ -26,8 +27,8 @@ var (
 		PrimaryKey: []*schema.Column{CpusColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "cpus_hosts_cpu_id",
-				Columns:    []*schema.Column{CpusColumns[7]},
+				Symbol:     "cpus_hosts_cpu",
+				Columns:    []*schema.Column{CpusColumns[8]},
 				RefColumns: []*schema.Column{HostsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -39,10 +40,10 @@ var (
 		{Name: "device", Type: field.TypeString},
 		{Name: "mount", Type: field.TypeString},
 		{Name: "fs_type", Type: field.TypeString},
-		{Name: "opts", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "text[]"}},
+		{Name: "opts", Type: field.TypeJSON, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "host_disk_id", Type: field.TypeString},
+		{Name: "host_disk", Type: field.TypeString},
 	}
 	// DisksTable holds the schema information for the "disks" table.
 	DisksTable = &schema.Table{
@@ -51,7 +52,7 @@ var (
 		PrimaryKey: []*schema.Column{DisksColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "disks_hosts_disk_id",
+				Symbol:     "disks_hosts_disk",
 				Columns:    []*schema.Column{DisksColumns[7]},
 				RefColumns: []*schema.Column{HostsColumns[0]},
 				OnDelete:   schema.Cascade,
@@ -88,7 +89,7 @@ var (
 		{Name: "process", Type: field.TypeString},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "host_netstat_id", Type: field.TypeString},
+		{Name: "host_netstat", Type: field.TypeString},
 	}
 	// NetstatsTable holds the schema information for the "netstats" table.
 	NetstatsTable = &schema.Table{
@@ -97,7 +98,7 @@ var (
 		PrimaryKey: []*schema.Column{NetstatsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "netstats_hosts_netstat_id",
+				Symbol:     "netstats_hosts_netstat",
 				Columns:    []*schema.Column{NetstatsColumns[7]},
 				RefColumns: []*schema.Column{HostsColumns[0]},
 				OnDelete:   schema.Cascade,
@@ -111,11 +112,11 @@ var (
 		{Name: "mtu", Type: field.TypeInt},
 		{Name: "name", Type: field.TypeString},
 		{Name: "mac", Type: field.TypeString},
-		{Name: "flags", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"postgres": "text[]"}},
-		{Name: "addrs", Type: field.TypeOther, Nullable: true, SchemaType: map[string]string{"postgres": "text[]"}},
+		{Name: "flags", Type: field.TypeJSON, Nullable: true},
+		{Name: "addrs", Type: field.TypeJSON, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "host_network_id", Type: field.TypeString},
+		{Name: "host_network", Type: field.TypeString},
 	}
 	// NetworksTable holds the schema information for the "networks" table.
 	NetworksTable = &schema.Table{
@@ -124,7 +125,7 @@ var (
 		PrimaryKey: []*schema.Column{NetworksColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "networks_hosts_network_id",
+				Symbol:     "networks_hosts_network",
 				Columns:    []*schema.Column{NetworksColumns[9]},
 				RefColumns: []*schema.Column{HostsColumns[0]},
 				OnDelete:   schema.Cascade,

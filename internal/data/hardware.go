@@ -2,13 +2,13 @@ package data
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/jackc/pgtype"
+	"github.com/jinzhu/copier"
 	"github.com/menta2l/go-hwc/internal/biz"
 	"github.com/menta2l/go-hwc/internal/data/ent"
+	enthost "github.com/menta2l/go-hwc/internal/data/ent/host"
 )
 
 type hardwareRepo struct {
@@ -26,6 +26,10 @@ func NewHardwareRepo(data *Data, logger log.Logger) biz.HardwareRepo {
 
 func (r *hardwareRepo) Save(ctx context.Context, g *biz.Hardware) (*biz.Hardware, error) {
 	host, err := r.data.db.Host.Get(ctx, g.Host.HostID)
+	if err != nil {
+		r.log.Error(err)
+		return nil, err
+	}
 	tx, err := r.data.db.Tx(ctx)
 	if err != nil {
 		r.log.Error(err)
@@ -50,12 +54,12 @@ func (r *hardwareRepo) Save(ctx context.Context, g *biz.Hardware) (*biz.Hardware
 		SetVirtualizationRole(g.Host.VirtualizationRole).
 		SetVirtualizationSystem(g.Host.VirtualizationSystem)
 	for _, cpu := range g.Cpu {
-		c, err := tx.Cpu.Create().SetFamily(cpu.Family).SetModel(cpu.Model).SetModelName(cpu.ModelName).SetVendorID(cpu.VendorID).Save(ctx)
+		c, err := tx.Cpu.Create().SetFamily(cpu.Family).SetModel(cpu.Model).SetModelName(cpu.ModelName).SetVendorID(cpu.VendorID).SetCPU(int(cpu.CPU)).Save(ctx)
 		if err != nil {
 			r.log.Error(err)
 			return nil, rollback(tx, err)
 		}
-		hc.AddCPUID(c)
+		hc.AddCPU(c)
 
 	}
 	hi, err := hc.Save(ctx)
@@ -64,20 +68,14 @@ func (r *hardwareRepo) Save(ctx context.Context, g *biz.Hardware) (*biz.Hardware
 		return nil, rollback(tx, err)
 	}
 	for _, disk := range g.DiskPartition {
-		ta := pgtype.TextArray{}
-		ta.Set(disk.Opts)
-		_, err := tx.Disk.Create().SetDevice(disk.Device).SetMount(disk.Mountpoint).SetOpts(&ta).SetFsType(disk.Fstype).SetHostID(hi).Save(ctx)
+		_, err := tx.Disk.Create().SetDevice(disk.Device).SetMountpoint(disk.Mountpoint).SetOpts(disk.Opts).SetFstype(disk.Fstype).SetHostID(hi).Save(ctx)
 		if err != nil {
 			r.log.Error(err)
 			return nil, rollback(tx, err)
 		}
 	}
 	for _, ni := range g.NetworkInterfaces {
-		addr := pgtype.TextArray{}
-		addr.Set(ni.Addrs)
-		flags := pgtype.TextArray{}
-		flags.Set(ni.Flags)
-		_, err := tx.Network.Create().SetHostID(hi).SetMAC(ni.HardwareAddr).SetIdx(int(ni.Index)).SetMtu(int(ni.MTU)).SetName(ni.Name).SetAddrs(&addr).SetFlags(&flags).Save(ctx)
+		_, err := tx.Network.Create().SetHostID(hi).SetHardwareAddr(ni.HardwareAddr).SetIndex(int(ni.Index)).SetMTU(int(ni.MTU)).SetName(ni.Name).SetAddrs(ni.Addrs).SetFlags(ni.Flags).Save(ctx)
 		if err != nil {
 			r.log.Error(err)
 			return nil, rollback(tx, err)
@@ -95,10 +93,6 @@ func (r *hardwareRepo) Save(ctx context.Context, g *biz.Hardware) (*biz.Hardware
 		r.log.Error(err)
 		return nil, err
 	}
-	b, err := json.MarshalIndent(g, "", "    ")
-	if err == nil {
-		fmt.Print(string(b))
-	}
 	return g, nil
 }
 func rollback(tx *ent.Tx, err error) error {
@@ -111,11 +105,51 @@ func (r *hardwareRepo) Update(ctx context.Context, g *biz.Hardware) (*biz.Hardwa
 	return g, nil
 }
 
-func (r *hardwareRepo) FindByID(context.Context, int64) (*biz.Hardware, error) {
-	return nil, nil
+func (r *hardwareRepo) GetByID(ctx context.Context, id string) (*biz.Hardware, error) {
+	h, err := r.data.db.Host.Query().WithDisk().WithCPU().WithNetstat().WithNetwork().Where(enthost.ID(id)).First(ctx)
+
+	//.Order(ent.Asc(entcpu.FieldCPU))
+	if err != nil {
+		return nil, err
+	}
+	ret := &biz.Hardware{
+		Host: &biz.Host{
+			Hostname:             h.Hostname,
+			OS:                   h.Os,
+			Platform:             h.Platform,
+			PlatformFamily:       h.PlatformFamily,
+			PlatformVersion:      h.PlatformVersion,
+			KernelVersion:        h.KernelVersion,
+			KernelArch:           h.KernelArch,
+			VirtualizationSystem: h.VirtualizationSystem,
+			VirtualizationRole:   h.VirtualizationRole,
+			HostID:               h.ID,
+		},
+		NetworkInterfaces: make([]*biz.NetworkInterfaces, 0),
+		Netstat:           make([]*biz.Netstat, 0),
+		DiskPartition:     make([]*biz.DiskPartition, 0),
+		Cpu:               make([]*biz.Cpu, 0),
+	}
+	err = copier.Copy(&ret.NetworkInterfaces, h.Edges.Network)
+	if err != nil {
+		return nil, err
+	}
+	err = copier.Copy(&ret.Netstat, h.Edges.Netstat)
+	if err != nil {
+		return nil, err
+	}
+	err = copier.Copy(&ret.DiskPartition, h.Edges.Disk)
+	if err != nil {
+		return nil, err
+	}
+	err = copier.Copy(&ret.Cpu, h.Edges.CPU)
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }
 
-func (r *hardwareRepo) ListByHello(context.Context, string) ([]*biz.Hardware, error) {
+func (r *hardwareRepo) GetByHostname(context.Context, string) (*biz.Hardware, error) {
 	return nil, nil
 }
 

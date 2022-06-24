@@ -3,12 +3,12 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/disk"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 )
@@ -20,20 +20,20 @@ type Disk struct {
 	ID int `json:"id,omitempty"`
 	// Device holds the value of the "device" field.
 	Device string `json:"device,omitempty"`
-	// Mount holds the value of the "mount" field.
-	Mount string `json:"mount,omitempty"`
-	// FsType holds the value of the "fs_type" field.
-	FsType string `json:"fs_type,omitempty"`
+	// Mountpoint holds the value of the "Mountpoint" field.
+	Mountpoint string `json:"Mountpoint,omitempty"`
+	// Fstype holds the value of the "Fstype" field.
+	Fstype string `json:"Fstype,omitempty"`
 	// Opts holds the value of the "opts" field.
-	Opts *pgtype.TextArray `json:"opts,omitempty"`
+	Opts []string `json:"opts,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the DiskQuery when eager-loading is set.
-	Edges        DiskEdges `json:"edges"`
-	host_disk_id *string
+	Edges     DiskEdges `json:"edges"`
+	host_disk *string
 }
 
 // DiskEdges holds the relations/edges for other nodes in the graph.
@@ -65,14 +65,14 @@ func (*Disk) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case disk.FieldOpts:
-			values[i] = new(pgtype.TextArray)
+			values[i] = new([]byte)
 		case disk.FieldID:
 			values[i] = new(sql.NullInt64)
-		case disk.FieldDevice, disk.FieldMount, disk.FieldFsType:
+		case disk.FieldDevice, disk.FieldMountpoint, disk.FieldFstype:
 			values[i] = new(sql.NullString)
 		case disk.FieldCreatedAt, disk.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case disk.ForeignKeys[0]: // host_disk_id
+		case disk.ForeignKeys[0]: // host_disk
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Disk", columns[i])
@@ -101,23 +101,25 @@ func (d *Disk) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				d.Device = value.String
 			}
-		case disk.FieldMount:
+		case disk.FieldMountpoint:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field mount", values[i])
+				return fmt.Errorf("unexpected type %T for field Mountpoint", values[i])
 			} else if value.Valid {
-				d.Mount = value.String
+				d.Mountpoint = value.String
 			}
-		case disk.FieldFsType:
+		case disk.FieldFstype:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field fs_type", values[i])
+				return fmt.Errorf("unexpected type %T for field Fstype", values[i])
 			} else if value.Valid {
-				d.FsType = value.String
+				d.Fstype = value.String
 			}
 		case disk.FieldOpts:
-			if value, ok := values[i].(*pgtype.TextArray); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field opts", values[i])
-			} else if value != nil {
-				d.Opts = value
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &d.Opts); err != nil {
+					return fmt.Errorf("unmarshal field opts: %w", err)
+				}
 			}
 		case disk.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -133,10 +135,10 @@ func (d *Disk) assignValues(columns []string, values []interface{}) error {
 			}
 		case disk.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field host_disk_id", values[i])
+				return fmt.Errorf("unexpected type %T for field host_disk", values[i])
 			} else if value.Valid {
-				d.host_disk_id = new(string)
-				*d.host_disk_id = value.String
+				d.host_disk = new(string)
+				*d.host_disk = value.String
 			}
 		}
 	}
@@ -173,10 +175,10 @@ func (d *Disk) String() string {
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
 	builder.WriteString(", device=")
 	builder.WriteString(d.Device)
-	builder.WriteString(", mount=")
-	builder.WriteString(d.Mount)
-	builder.WriteString(", fs_type=")
-	builder.WriteString(d.FsType)
+	builder.WriteString(", Mountpoint=")
+	builder.WriteString(d.Mountpoint)
+	builder.WriteString(", Fstype=")
+	builder.WriteString(d.Fstype)
 	builder.WriteString(", opts=")
 	builder.WriteString(fmt.Sprintf("%v", d.Opts))
 	builder.WriteString(", created_at=")

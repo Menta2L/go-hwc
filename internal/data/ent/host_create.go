@@ -112,64 +112,64 @@ func (hc *HostCreate) SetID(s string) *HostCreate {
 	return hc
 }
 
-// AddCPUIDIDs adds the "cpu_id" edge to the Cpu entity by IDs.
-func (hc *HostCreate) AddCPUIDIDs(ids ...int) *HostCreate {
-	hc.mutation.AddCPUIDIDs(ids...)
+// AddCPUIDs adds the "cpu" edge to the Cpu entity by IDs.
+func (hc *HostCreate) AddCPUIDs(ids ...int) *HostCreate {
+	hc.mutation.AddCPUIDs(ids...)
 	return hc
 }
 
-// AddCPUID adds the "cpu_id" edges to the Cpu entity.
-func (hc *HostCreate) AddCPUID(c ...*Cpu) *HostCreate {
+// AddCPU adds the "cpu" edges to the Cpu entity.
+func (hc *HostCreate) AddCPU(c ...*Cpu) *HostCreate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return hc.AddCPUIDIDs(ids...)
+	return hc.AddCPUIDs(ids...)
 }
 
-// AddNetworkIDIDs adds the "network_id" edge to the Network entity by IDs.
-func (hc *HostCreate) AddNetworkIDIDs(ids ...int) *HostCreate {
-	hc.mutation.AddNetworkIDIDs(ids...)
+// AddNetworkIDs adds the "network" edge to the Network entity by IDs.
+func (hc *HostCreate) AddNetworkIDs(ids ...int) *HostCreate {
+	hc.mutation.AddNetworkIDs(ids...)
 	return hc
 }
 
-// AddNetworkID adds the "network_id" edges to the Network entity.
-func (hc *HostCreate) AddNetworkID(n ...*Network) *HostCreate {
+// AddNetwork adds the "network" edges to the Network entity.
+func (hc *HostCreate) AddNetwork(n ...*Network) *HostCreate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hc.AddNetworkIDIDs(ids...)
+	return hc.AddNetworkIDs(ids...)
 }
 
-// AddNetstatIDIDs adds the "netstat_id" edge to the Netstat entity by IDs.
-func (hc *HostCreate) AddNetstatIDIDs(ids ...int) *HostCreate {
-	hc.mutation.AddNetstatIDIDs(ids...)
+// AddNetstatIDs adds the "netstat" edge to the Netstat entity by IDs.
+func (hc *HostCreate) AddNetstatIDs(ids ...int) *HostCreate {
+	hc.mutation.AddNetstatIDs(ids...)
 	return hc
 }
 
-// AddNetstatID adds the "netstat_id" edges to the Netstat entity.
-func (hc *HostCreate) AddNetstatID(n ...*Netstat) *HostCreate {
+// AddNetstat adds the "netstat" edges to the Netstat entity.
+func (hc *HostCreate) AddNetstat(n ...*Netstat) *HostCreate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hc.AddNetstatIDIDs(ids...)
+	return hc.AddNetstatIDs(ids...)
 }
 
-// AddDiskIDIDs adds the "disk_id" edge to the Disk entity by IDs.
-func (hc *HostCreate) AddDiskIDIDs(ids ...int) *HostCreate {
-	hc.mutation.AddDiskIDIDs(ids...)
+// AddDiskIDs adds the "disk" edge to the Disk entity by IDs.
+func (hc *HostCreate) AddDiskIDs(ids ...int) *HostCreate {
+	hc.mutation.AddDiskIDs(ids...)
 	return hc
 }
 
-// AddDiskID adds the "disk_id" edges to the Disk entity.
-func (hc *HostCreate) AddDiskID(d ...*Disk) *HostCreate {
+// AddDisk adds the "disk" edges to the Disk entity.
+func (hc *HostCreate) AddDisk(d ...*Disk) *HostCreate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
-	return hc.AddDiskIDIDs(ids...)
+	return hc.AddDiskIDs(ids...)
 }
 
 // Mutation returns the HostMutation object of the builder.
@@ -412,12 +412,12 @@ func (hc *HostCreate) createSpec() (*Host, *sqlgraph.CreateSpec) {
 		})
 		_node.UpdatedAt = value
 	}
-	if nodes := hc.mutation.CPUIDIDs(); len(nodes) > 0 {
+	if nodes := hc.mutation.CPUIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -431,12 +431,12 @@ func (hc *HostCreate) createSpec() (*Host, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := hc.mutation.NetworkIDIDs(); len(nodes) > 0 {
+	if nodes := hc.mutation.NetworkIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -450,12 +450,12 @@ func (hc *HostCreate) createSpec() (*Host, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := hc.mutation.NetstatIDIDs(); len(nodes) > 0 {
+	if nodes := hc.mutation.NetstatIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -469,12 +469,12 @@ func (hc *HostCreate) createSpec() (*Host, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := hc.mutation.DiskIDIDs(); len(nodes) > 0 {
+	if nodes := hc.mutation.DiskIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

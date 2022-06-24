@@ -31,7 +31,7 @@ func (Netstat) Fields() []ent.Field {
 func (Netstat) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("host_id", Host.Type).
-			Ref("netstat_id").
+			Ref("netstat").
 			Unique().
 			// We add the "Required" method to the builder
 			// to make this edge required on entity creation.

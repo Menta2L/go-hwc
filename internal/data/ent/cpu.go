@@ -17,6 +17,8 @@ type Cpu struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// CPU holds the value of the "CPU" field.
+	CPU int `json:"CPU,omitempty"`
 	// VendorID holds the value of the "vendor_id" field.
 	VendorID string `json:"vendor_id,omitempty"`
 	// Family holds the value of the "family" field.
@@ -31,8 +33,8 @@ type Cpu struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CpuQuery when eager-loading is set.
-	Edges       CpuEdges `json:"edges"`
-	host_cpu_id *string
+	Edges    CpuEdges `json:"edges"`
+	host_cpu *string
 }
 
 // CpuEdges holds the relations/edges for other nodes in the graph.
@@ -63,13 +65,13 @@ func (*Cpu) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case cpu.FieldID:
+		case cpu.FieldID, cpu.FieldCPU:
 			values[i] = new(sql.NullInt64)
 		case cpu.FieldVendorID, cpu.FieldFamily, cpu.FieldModel, cpu.FieldModelName:
 			values[i] = new(sql.NullString)
 		case cpu.FieldCreatedAt, cpu.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case cpu.ForeignKeys[0]: // host_cpu_id
+		case cpu.ForeignKeys[0]: // host_cpu
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Cpu", columns[i])
@@ -92,6 +94,12 @@ func (c *Cpu) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			c.ID = int(value.Int64)
+		case cpu.FieldCPU:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field CPU", values[i])
+			} else if value.Valid {
+				c.CPU = int(value.Int64)
+			}
 		case cpu.FieldVendorID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field vendor_id", values[i])
@@ -130,10 +138,10 @@ func (c *Cpu) assignValues(columns []string, values []interface{}) error {
 			}
 		case cpu.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field host_cpu_id", values[i])
+				return fmt.Errorf("unexpected type %T for field host_cpu", values[i])
 			} else if value.Valid {
-				c.host_cpu_id = new(string)
-				*c.host_cpu_id = value.String
+				c.host_cpu = new(string)
+				*c.host_cpu = value.String
 			}
 		}
 	}
@@ -168,6 +176,8 @@ func (c *Cpu) String() string {
 	var builder strings.Builder
 	builder.WriteString("Cpu(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
+	builder.WriteString(", CPU=")
+	builder.WriteString(fmt.Sprintf("%v", c.CPU))
 	builder.WriteString(", vendor_id=")
 	builder.WriteString(c.VendorID)
 	builder.WriteString(", family=")

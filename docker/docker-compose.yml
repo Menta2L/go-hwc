@@ -31,6 +31,3 @@ services:
       POSTGRES_PASSWORD: "hwc"
       POSTGRES_USER: "hwc"
       POSTGRES_DB: "hwc"
-volumes:
- pgadmin:
- postgres:

@@ -12,7 +12,7 @@ var ProviderSet = wire.NewSet(NewWorker)
 var works []Work
 
 type Worker struct {
-	h *log.Helper
+	log *log.Helper
 
 	euc    *biz.HardwareUsecase
 	client hwc.HardwareClient
@@ -49,10 +49,10 @@ type Work struct {
 
 func NewWorker(c hwc.HardwareClient, logger log.Logger, euc *biz.HardwareUsecase) *Worker {
 	worker := Worker{
-		h:      log.NewHelper(logger),
+		log:    log.NewHelper(logger),
 		euc:    euc,
 		client: c,
 	}
-	worker.registerWork("hello", HelloWork)
+	worker.registerWork("collector", CollectorWork)
 	return &worker
 }

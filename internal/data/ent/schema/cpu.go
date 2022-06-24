@@ -16,6 +16,7 @@ type Cpu struct {
 // Fields of the Cpu.
 func (Cpu) Fields() []ent.Field {
 	return []ent.Field{
+		field.Int("CPU").StorageKey("idx"),
 		field.String("vendor_id"),
 		field.String("family"),
 		field.String("model"),
@@ -31,7 +32,7 @@ func (Cpu) Fields() []ent.Field {
 func (Cpu) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("host_id", Host.Type).
-			Ref("cpu_id").
+			Ref("cpu").
 			Unique(),
 	}
 }

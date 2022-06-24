@@ -11,6 +11,8 @@ const (
 	Label = "cpu"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCPU holds the string denoting the cpu field in the database.
+	FieldCPU = "idx"
 	// FieldVendorID holds the string denoting the vendor_id field in the database.
 	FieldVendorID = "vendor_id"
 	// FieldFamily holds the string denoting the family field in the database.
@@ -33,12 +35,13 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "host" package.
 	HostIDInverseTable = "hosts"
 	// HostIDColumn is the table column denoting the host_id relation/edge.
-	HostIDColumn = "host_cpu_id"
+	HostIDColumn = "host_cpu"
 )
 
 // Columns holds all SQL columns for cpu fields.
 var Columns = []string{
 	FieldID,
+	FieldCPU,
 	FieldVendorID,
 	FieldFamily,
 	FieldModel,
@@ -50,7 +53,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "cpus"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"host_cpu_id",
+	"host_cpu",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

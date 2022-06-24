@@ -13,10 +13,10 @@ const (
 	FieldID = "id"
 	// FieldDevice holds the string denoting the device field in the database.
 	FieldDevice = "device"
-	// FieldMount holds the string denoting the mount field in the database.
-	FieldMount = "mount"
-	// FieldFsType holds the string denoting the fs_type field in the database.
-	FieldFsType = "fs_type"
+	// FieldMountpoint holds the string denoting the mountpoint field in the database.
+	FieldMountpoint = "mount"
+	// FieldFstype holds the string denoting the fstype field in the database.
+	FieldFstype = "fs_type"
 	// FieldOpts holds the string denoting the opts field in the database.
 	FieldOpts = "opts"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
@@ -33,15 +33,15 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "host" package.
 	HostIDInverseTable = "hosts"
 	// HostIDColumn is the table column denoting the host_id relation/edge.
-	HostIDColumn = "host_disk_id"
+	HostIDColumn = "host_disk"
 )
 
 // Columns holds all SQL columns for disk fields.
 var Columns = []string{
 	FieldID,
 	FieldDevice,
-	FieldMount,
-	FieldFsType,
+	FieldMountpoint,
+	FieldFstype,
 	FieldOpts,
 	FieldCreatedAt,
 	FieldUpdatedAt,
@@ -50,7 +50,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "disks"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"host_disk_id",
+	"host_disk",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

@@ -31,8 +31,8 @@ type Netstat struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the NetstatQuery when eager-loading is set.
-	Edges           NetstatEdges `json:"edges"`
-	host_netstat_id *string
+	Edges        NetstatEdges `json:"edges"`
+	host_netstat *string
 }
 
 // NetstatEdges holds the relations/edges for other nodes in the graph.
@@ -69,7 +69,7 @@ func (*Netstat) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullString)
 		case netstat.FieldCreatedAt, netstat.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case netstat.ForeignKeys[0]: // host_netstat_id
+		case netstat.ForeignKeys[0]: // host_netstat
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Netstat", columns[i])
@@ -130,10 +130,10 @@ func (n *Netstat) assignValues(columns []string, values []interface{}) error {
 			}
 		case netstat.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field host_netstat_id", values[i])
+				return fmt.Errorf("unexpected type %T for field host_netstat", values[i])
 			} else if value.Valid {
-				n.host_netstat_id = new(string)
-				*n.host_netstat_id = value.String
+				n.host_netstat = new(string)
+				*n.host_netstat = value.String
 			}
 		}
 	}

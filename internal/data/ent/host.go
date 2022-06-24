@@ -45,53 +45,53 @@ type Host struct {
 
 // HostEdges holds the relations/edges for other nodes in the graph.
 type HostEdges struct {
-	// CPUID holds the value of the cpu_id edge.
-	CPUID []*Cpu `json:"cpu_id,omitempty"`
-	// NetworkID holds the value of the network_id edge.
-	NetworkID []*Network `json:"network_id,omitempty"`
-	// NetstatID holds the value of the netstat_id edge.
-	NetstatID []*Netstat `json:"netstat_id,omitempty"`
-	// DiskID holds the value of the disk_id edge.
-	DiskID []*Disk `json:"disk_id,omitempty"`
+	// CPU holds the value of the cpu edge.
+	CPU []*Cpu `json:"cpu,omitempty"`
+	// Network holds the value of the network edge.
+	Network []*Network `json:"network,omitempty"`
+	// Netstat holds the value of the netstat edge.
+	Netstat []*Netstat `json:"netstat,omitempty"`
+	// Disk holds the value of the disk edge.
+	Disk []*Disk `json:"disk,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [4]bool
 }
 
-// CPUIDOrErr returns the CPUID value or an error if the edge
+// CPUOrErr returns the CPU value or an error if the edge
 // was not loaded in eager-loading.
-func (e HostEdges) CPUIDOrErr() ([]*Cpu, error) {
+func (e HostEdges) CPUOrErr() ([]*Cpu, error) {
 	if e.loadedTypes[0] {
-		return e.CPUID, nil
+		return e.CPU, nil
 	}
-	return nil, &NotLoadedError{edge: "cpu_id"}
+	return nil, &NotLoadedError{edge: "cpu"}
 }
 
-// NetworkIDOrErr returns the NetworkID value or an error if the edge
+// NetworkOrErr returns the Network value or an error if the edge
 // was not loaded in eager-loading.
-func (e HostEdges) NetworkIDOrErr() ([]*Network, error) {
+func (e HostEdges) NetworkOrErr() ([]*Network, error) {
 	if e.loadedTypes[1] {
-		return e.NetworkID, nil
+		return e.Network, nil
 	}
-	return nil, &NotLoadedError{edge: "network_id"}
+	return nil, &NotLoadedError{edge: "network"}
 }
 
-// NetstatIDOrErr returns the NetstatID value or an error if the edge
+// NetstatOrErr returns the Netstat value or an error if the edge
 // was not loaded in eager-loading.
-func (e HostEdges) NetstatIDOrErr() ([]*Netstat, error) {
+func (e HostEdges) NetstatOrErr() ([]*Netstat, error) {
 	if e.loadedTypes[2] {
-		return e.NetstatID, nil
+		return e.Netstat, nil
 	}
-	return nil, &NotLoadedError{edge: "netstat_id"}
+	return nil, &NotLoadedError{edge: "netstat"}
 }
 
-// DiskIDOrErr returns the DiskID value or an error if the edge
+// DiskOrErr returns the Disk value or an error if the edge
 // was not loaded in eager-loading.
-func (e HostEdges) DiskIDOrErr() ([]*Disk, error) {
+func (e HostEdges) DiskOrErr() ([]*Disk, error) {
 	if e.loadedTypes[3] {
-		return e.DiskID, nil
+		return e.Disk, nil
 	}
-	return nil, &NotLoadedError{edge: "disk_id"}
+	return nil, &NotLoadedError{edge: "disk"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -195,24 +195,24 @@ func (h *Host) assignValues(columns []string, values []interface{}) error {
 	return nil
 }
 
-// QueryCPUID queries the "cpu_id" edge of the Host entity.
-func (h *Host) QueryCPUID() *CPUQuery {
-	return (&HostClient{config: h.config}).QueryCPUID(h)
+// QueryCPU queries the "cpu" edge of the Host entity.
+func (h *Host) QueryCPU() *CPUQuery {
+	return (&HostClient{config: h.config}).QueryCPU(h)
 }
 
-// QueryNetworkID queries the "network_id" edge of the Host entity.
-func (h *Host) QueryNetworkID() *NetworkQuery {
-	return (&HostClient{config: h.config}).QueryNetworkID(h)
+// QueryNetwork queries the "network" edge of the Host entity.
+func (h *Host) QueryNetwork() *NetworkQuery {
+	return (&HostClient{config: h.config}).QueryNetwork(h)
 }
 
-// QueryNetstatID queries the "netstat_id" edge of the Host entity.
-func (h *Host) QueryNetstatID() *NetstatQuery {
-	return (&HostClient{config: h.config}).QueryNetstatID(h)
+// QueryNetstat queries the "netstat" edge of the Host entity.
+func (h *Host) QueryNetstat() *NetstatQuery {
+	return (&HostClient{config: h.config}).QueryNetstat(h)
 }
 
-// QueryDiskID queries the "disk_id" edge of the Host entity.
-func (h *Host) QueryDiskID() *DiskQuery {
-	return (&HostClient{config: h.config}).QueryDiskID(h)
+// QueryDisk queries the "disk" edge of the Host entity.
+func (h *Host) QueryDisk() *DiskQuery {
+	return (&HostClient{config: h.config}).QueryDisk(h)
 }
 
 // Update returns a builder for updating this Host.

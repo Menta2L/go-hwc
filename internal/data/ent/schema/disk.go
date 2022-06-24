@@ -4,10 +4,8 @@ import (
 	"time"
 
 	"entgo.io/ent"
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 )
 
 // Disk holds the schema definition for the Disk entity.
@@ -19,12 +17,10 @@ type Disk struct {
 func (Disk) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("device"),
-		field.String("mount"),
-		field.String("fs_type"),
-		field.Other("opts", &pgtype.TextArray{}).
-			SchemaType(map[string]string{
-				dialect.Postgres: "text[]",
-			}),
+		field.String("Mountpoint").StorageKey("mount"),
+		field.String("Fstype").StorageKey("fs_type"),
+		field.JSON("opts", []string{}).
+			Optional().Optional(),
 		field.Time("created_at").
 			Default(time.Now),
 		field.Time("updated_at").
@@ -36,7 +32,7 @@ func (Disk) Fields() []ent.Field {
 func (Disk) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("host_id", Host.Type).
-			Ref("disk_id").
+			Ref("disk").
 			Unique().
 			// We add the "Required" method to the builder
 			// to make this edge required on entity creation.

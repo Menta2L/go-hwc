@@ -21,6 +21,12 @@ type CPUCreate struct {
 	hooks    []Hook
 }
 
+// SetCPU sets the "CPU" field.
+func (cc *CPUCreate) SetCPU(i int) *CPUCreate {
+	cc.mutation.SetCPU(i)
+	return cc
+}
+
 // SetVendorID sets the "vendor_id" field.
 func (cc *CPUCreate) SetVendorID(s string) *CPUCreate {
 	cc.mutation.SetVendorID(s)
@@ -175,6 +181,9 @@ func (cc *CPUCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (cc *CPUCreate) check() error {
+	if _, ok := cc.mutation.CPU(); !ok {
+		return &ValidationError{Name: "CPU", err: errors.New(`ent: missing required field "Cpu.CPU"`)}
+	}
 	if _, ok := cc.mutation.VendorID(); !ok {
 		return &ValidationError{Name: "vendor_id", err: errors.New(`ent: missing required field "Cpu.vendor_id"`)}
 	}
@@ -220,6 +229,14 @@ func (cc *CPUCreate) createSpec() (*Cpu, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := cc.mutation.CPU(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cpu.FieldCPU,
+		})
+		_node.CPU = value
+	}
 	if value, ok := cc.mutation.VendorID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -285,7 +302,7 @@ func (cc *CPUCreate) createSpec() (*Cpu, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.host_cpu_id = &nodes[0]
+		_node.host_cpu = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

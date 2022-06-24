@@ -292,12 +292,12 @@ func (cq *CPUQuery) WithHostID(opts ...func(*HostQuery)) *CPUQuery {
 // Example:
 //
 //	var v []struct {
-//		VendorID string `json:"vendor_id,omitempty"`
+//		CPU int `json:"CPU,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.CPU.Query().
-//		GroupBy(cpu.FieldVendorID).
+//		GroupBy(cpu.FieldCPU).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -319,11 +319,11 @@ func (cq *CPUQuery) GroupBy(field string, fields ...string) *CPUGroupBy {
 // Example:
 //
 //	var v []struct {
-//		VendorID string `json:"vendor_id,omitempty"`
+//		CPU int `json:"CPU,omitempty"`
 //	}
 //
 //	client.CPU.Query().
-//		Select(cpu.FieldVendorID).
+//		Select(cpu.FieldCPU).
 //		Scan(ctx, &v)
 //
 func (cq *CPUQuery) Select(fields ...string) *CPUSelect {
@@ -386,10 +386,10 @@ func (cq *CPUQuery) sqlAll(ctx context.Context) ([]*Cpu, error) {
 		ids := make([]string, 0, len(nodes))
 		nodeids := make(map[string][]*Cpu)
 		for i := range nodes {
-			if nodes[i].host_cpu_id == nil {
+			if nodes[i].host_cpu == nil {
 				continue
 			}
-			fk := *nodes[i].host_cpu_id
+			fk := *nodes[i].host_cpu
 			if _, ok := nodeids[fk]; !ok {
 				ids = append(ids, fk)
 			}
@@ -403,7 +403,7 @@ func (cq *CPUQuery) sqlAll(ctx context.Context) ([]*Cpu, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_cpu_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_cpu" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.HostID = n

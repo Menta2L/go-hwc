@@ -7,7 +7,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/predicate"
 )
 
@@ -101,24 +100,17 @@ func Device(v string) predicate.Disk {
 	})
 }
 
-// Mount applies equality check predicate on the "mount" field. It's identical to MountEQ.
-func Mount(v string) predicate.Disk {
+// Mountpoint applies equality check predicate on the "Mountpoint" field. It's identical to MountpointEQ.
+func Mountpoint(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMount), v))
+		s.Where(sql.EQ(s.C(FieldMountpoint), v))
 	})
 }
 
-// FsType applies equality check predicate on the "fs_type" field. It's identical to FsTypeEQ.
-func FsType(v string) predicate.Disk {
+// Fstype applies equality check predicate on the "Fstype" field. It's identical to FstypeEQ.
+func Fstype(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFsType), v))
-	})
-}
-
-// Opts applies equality check predicate on the "opts" field. It's identical to OptsEQ.
-func Opts(v *pgtype.TextArray) predicate.Disk {
-	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOpts), v))
+		s.Where(sql.EQ(s.C(FieldFstype), v))
 	})
 }
 
@@ -247,22 +239,22 @@ func DeviceContainsFold(v string) predicate.Disk {
 	})
 }
 
-// MountEQ applies the EQ predicate on the "mount" field.
-func MountEQ(v string) predicate.Disk {
+// MountpointEQ applies the EQ predicate on the "Mountpoint" field.
+func MountpointEQ(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMount), v))
+		s.Where(sql.EQ(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountNEQ applies the NEQ predicate on the "mount" field.
-func MountNEQ(v string) predicate.Disk {
+// MountpointNEQ applies the NEQ predicate on the "Mountpoint" field.
+func MountpointNEQ(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMount), v))
+		s.Where(sql.NEQ(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountIn applies the In predicate on the "mount" field.
-func MountIn(vs ...string) predicate.Disk {
+// MountpointIn applies the In predicate on the "Mountpoint" field.
+func MountpointIn(vs ...string) predicate.Disk {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -274,12 +266,12 @@ func MountIn(vs ...string) predicate.Disk {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldMount), v...))
+		s.Where(sql.In(s.C(FieldMountpoint), v...))
 	})
 }
 
-// MountNotIn applies the NotIn predicate on the "mount" field.
-func MountNotIn(vs ...string) predicate.Disk {
+// MountpointNotIn applies the NotIn predicate on the "Mountpoint" field.
+func MountpointNotIn(vs ...string) predicate.Disk {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -291,89 +283,89 @@ func MountNotIn(vs ...string) predicate.Disk {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldMount), v...))
+		s.Where(sql.NotIn(s.C(FieldMountpoint), v...))
 	})
 }
 
-// MountGT applies the GT predicate on the "mount" field.
-func MountGT(v string) predicate.Disk {
+// MountpointGT applies the GT predicate on the "Mountpoint" field.
+func MountpointGT(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMount), v))
+		s.Where(sql.GT(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountGTE applies the GTE predicate on the "mount" field.
-func MountGTE(v string) predicate.Disk {
+// MountpointGTE applies the GTE predicate on the "Mountpoint" field.
+func MountpointGTE(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMount), v))
+		s.Where(sql.GTE(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountLT applies the LT predicate on the "mount" field.
-func MountLT(v string) predicate.Disk {
+// MountpointLT applies the LT predicate on the "Mountpoint" field.
+func MountpointLT(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMount), v))
+		s.Where(sql.LT(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountLTE applies the LTE predicate on the "mount" field.
-func MountLTE(v string) predicate.Disk {
+// MountpointLTE applies the LTE predicate on the "Mountpoint" field.
+func MountpointLTE(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMount), v))
+		s.Where(sql.LTE(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountContains applies the Contains predicate on the "mount" field.
-func MountContains(v string) predicate.Disk {
+// MountpointContains applies the Contains predicate on the "Mountpoint" field.
+func MountpointContains(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldMount), v))
+		s.Where(sql.Contains(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountHasPrefix applies the HasPrefix predicate on the "mount" field.
-func MountHasPrefix(v string) predicate.Disk {
+// MountpointHasPrefix applies the HasPrefix predicate on the "Mountpoint" field.
+func MountpointHasPrefix(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldMount), v))
+		s.Where(sql.HasPrefix(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountHasSuffix applies the HasSuffix predicate on the "mount" field.
-func MountHasSuffix(v string) predicate.Disk {
+// MountpointHasSuffix applies the HasSuffix predicate on the "Mountpoint" field.
+func MountpointHasSuffix(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldMount), v))
+		s.Where(sql.HasSuffix(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountEqualFold applies the EqualFold predicate on the "mount" field.
-func MountEqualFold(v string) predicate.Disk {
+// MountpointEqualFold applies the EqualFold predicate on the "Mountpoint" field.
+func MountpointEqualFold(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldMount), v))
+		s.Where(sql.EqualFold(s.C(FieldMountpoint), v))
 	})
 }
 
-// MountContainsFold applies the ContainsFold predicate on the "mount" field.
-func MountContainsFold(v string) predicate.Disk {
+// MountpointContainsFold applies the ContainsFold predicate on the "Mountpoint" field.
+func MountpointContainsFold(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldMount), v))
+		s.Where(sql.ContainsFold(s.C(FieldMountpoint), v))
 	})
 }
 
-// FsTypeEQ applies the EQ predicate on the "fs_type" field.
-func FsTypeEQ(v string) predicate.Disk {
+// FstypeEQ applies the EQ predicate on the "Fstype" field.
+func FstypeEQ(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFsType), v))
+		s.Where(sql.EQ(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeNEQ applies the NEQ predicate on the "fs_type" field.
-func FsTypeNEQ(v string) predicate.Disk {
+// FstypeNEQ applies the NEQ predicate on the "Fstype" field.
+func FstypeNEQ(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFsType), v))
+		s.Where(sql.NEQ(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeIn applies the In predicate on the "fs_type" field.
-func FsTypeIn(vs ...string) predicate.Disk {
+// FstypeIn applies the In predicate on the "Fstype" field.
+func FstypeIn(vs ...string) predicate.Disk {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -385,12 +377,12 @@ func FsTypeIn(vs ...string) predicate.Disk {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldFsType), v...))
+		s.Where(sql.In(s.C(FieldFstype), v...))
 	})
 }
 
-// FsTypeNotIn applies the NotIn predicate on the "fs_type" field.
-func FsTypeNotIn(vs ...string) predicate.Disk {
+// FstypeNotIn applies the NotIn predicate on the "Fstype" field.
+func FstypeNotIn(vs ...string) predicate.Disk {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -402,146 +394,84 @@ func FsTypeNotIn(vs ...string) predicate.Disk {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldFsType), v...))
+		s.Where(sql.NotIn(s.C(FieldFstype), v...))
 	})
 }
 
-// FsTypeGT applies the GT predicate on the "fs_type" field.
-func FsTypeGT(v string) predicate.Disk {
+// FstypeGT applies the GT predicate on the "Fstype" field.
+func FstypeGT(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFsType), v))
+		s.Where(sql.GT(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeGTE applies the GTE predicate on the "fs_type" field.
-func FsTypeGTE(v string) predicate.Disk {
+// FstypeGTE applies the GTE predicate on the "Fstype" field.
+func FstypeGTE(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFsType), v))
+		s.Where(sql.GTE(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeLT applies the LT predicate on the "fs_type" field.
-func FsTypeLT(v string) predicate.Disk {
+// FstypeLT applies the LT predicate on the "Fstype" field.
+func FstypeLT(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFsType), v))
+		s.Where(sql.LT(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeLTE applies the LTE predicate on the "fs_type" field.
-func FsTypeLTE(v string) predicate.Disk {
+// FstypeLTE applies the LTE predicate on the "Fstype" field.
+func FstypeLTE(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFsType), v))
+		s.Where(sql.LTE(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeContains applies the Contains predicate on the "fs_type" field.
-func FsTypeContains(v string) predicate.Disk {
+// FstypeContains applies the Contains predicate on the "Fstype" field.
+func FstypeContains(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldFsType), v))
+		s.Where(sql.Contains(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeHasPrefix applies the HasPrefix predicate on the "fs_type" field.
-func FsTypeHasPrefix(v string) predicate.Disk {
+// FstypeHasPrefix applies the HasPrefix predicate on the "Fstype" field.
+func FstypeHasPrefix(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldFsType), v))
+		s.Where(sql.HasPrefix(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeHasSuffix applies the HasSuffix predicate on the "fs_type" field.
-func FsTypeHasSuffix(v string) predicate.Disk {
+// FstypeHasSuffix applies the HasSuffix predicate on the "Fstype" field.
+func FstypeHasSuffix(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldFsType), v))
+		s.Where(sql.HasSuffix(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeEqualFold applies the EqualFold predicate on the "fs_type" field.
-func FsTypeEqualFold(v string) predicate.Disk {
+// FstypeEqualFold applies the EqualFold predicate on the "Fstype" field.
+func FstypeEqualFold(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldFsType), v))
+		s.Where(sql.EqualFold(s.C(FieldFstype), v))
 	})
 }
 
-// FsTypeContainsFold applies the ContainsFold predicate on the "fs_type" field.
-func FsTypeContainsFold(v string) predicate.Disk {
+// FstypeContainsFold applies the ContainsFold predicate on the "Fstype" field.
+func FstypeContainsFold(v string) predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldFsType), v))
+		s.Where(sql.ContainsFold(s.C(FieldFstype), v))
 	})
 }
 
-// OptsEQ applies the EQ predicate on the "opts" field.
-func OptsEQ(v *pgtype.TextArray) predicate.Disk {
+// OptsIsNil applies the IsNil predicate on the "opts" field.
+func OptsIsNil() predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldOpts), v))
+		s.Where(sql.IsNull(s.C(FieldOpts)))
 	})
 }
 
-// OptsNEQ applies the NEQ predicate on the "opts" field.
-func OptsNEQ(v *pgtype.TextArray) predicate.Disk {
+// OptsNotNil applies the NotNil predicate on the "opts" field.
+func OptsNotNil() predicate.Disk {
 	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldOpts), v))
-	})
-}
-
-// OptsIn applies the In predicate on the "opts" field.
-func OptsIn(vs ...*pgtype.TextArray) predicate.Disk {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Disk(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldOpts), v...))
-	})
-}
-
-// OptsNotIn applies the NotIn predicate on the "opts" field.
-func OptsNotIn(vs ...*pgtype.TextArray) predicate.Disk {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Disk(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldOpts), v...))
-	})
-}
-
-// OptsGT applies the GT predicate on the "opts" field.
-func OptsGT(v *pgtype.TextArray) predicate.Disk {
-	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldOpts), v))
-	})
-}
-
-// OptsGTE applies the GTE predicate on the "opts" field.
-func OptsGTE(v *pgtype.TextArray) predicate.Disk {
-	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldOpts), v))
-	})
-}
-
-// OptsLT applies the LT predicate on the "opts" field.
-func OptsLT(v *pgtype.TextArray) predicate.Disk {
-	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldOpts), v))
-	})
-}
-
-// OptsLTE applies the LTE predicate on the "opts" field.
-func OptsLTE(v *pgtype.TextArray) predicate.Disk {
-	return predicate.Disk(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldOpts), v))
+		s.Where(sql.NotNull(s.C(FieldOpts)))
 	})
 }
 

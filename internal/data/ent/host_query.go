@@ -30,10 +30,10 @@ type HostQuery struct {
 	fields     []string
 	predicates []predicate.Host
 	// eager-loading edges.
-	withCPUID     *CPUQuery
-	withNetworkID *NetworkQuery
-	withNetstatID *NetstatQuery
-	withDiskID    *DiskQuery
+	withCPU     *CPUQuery
+	withNetwork *NetworkQuery
+	withNetstat *NetstatQuery
+	withDisk    *DiskQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -70,8 +70,8 @@ func (hq *HostQuery) Order(o ...OrderFunc) *HostQuery {
 	return hq
 }
 
-// QueryCPUID chains the current query on the "cpu_id" edge.
-func (hq *HostQuery) QueryCPUID() *CPUQuery {
+// QueryCPU chains the current query on the "cpu" edge.
+func (hq *HostQuery) QueryCPU() *CPUQuery {
 	query := &CPUQuery{config: hq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := hq.prepareQuery(ctx); err != nil {
@@ -84,7 +84,7 @@ func (hq *HostQuery) QueryCPUID() *CPUQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, selector),
 			sqlgraph.To(cpu.Table, cpu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.CPUIDTable, host.CPUIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.CPUTable, host.CPUColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(hq.driver.Dialect(), step)
 		return fromU, nil
@@ -92,8 +92,8 @@ func (hq *HostQuery) QueryCPUID() *CPUQuery {
 	return query
 }
 
-// QueryNetworkID chains the current query on the "network_id" edge.
-func (hq *HostQuery) QueryNetworkID() *NetworkQuery {
+// QueryNetwork chains the current query on the "network" edge.
+func (hq *HostQuery) QueryNetwork() *NetworkQuery {
 	query := &NetworkQuery{config: hq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := hq.prepareQuery(ctx); err != nil {
@@ -106,7 +106,7 @@ func (hq *HostQuery) QueryNetworkID() *NetworkQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, selector),
 			sqlgraph.To(network.Table, network.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.NetworkIDTable, host.NetworkIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.NetworkTable, host.NetworkColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(hq.driver.Dialect(), step)
 		return fromU, nil
@@ -114,8 +114,8 @@ func (hq *HostQuery) QueryNetworkID() *NetworkQuery {
 	return query
 }
 
-// QueryNetstatID chains the current query on the "netstat_id" edge.
-func (hq *HostQuery) QueryNetstatID() *NetstatQuery {
+// QueryNetstat chains the current query on the "netstat" edge.
+func (hq *HostQuery) QueryNetstat() *NetstatQuery {
 	query := &NetstatQuery{config: hq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := hq.prepareQuery(ctx); err != nil {
@@ -128,7 +128,7 @@ func (hq *HostQuery) QueryNetstatID() *NetstatQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, selector),
 			sqlgraph.To(netstat.Table, netstat.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.NetstatIDTable, host.NetstatIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.NetstatTable, host.NetstatColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(hq.driver.Dialect(), step)
 		return fromU, nil
@@ -136,8 +136,8 @@ func (hq *HostQuery) QueryNetstatID() *NetstatQuery {
 	return query
 }
 
-// QueryDiskID chains the current query on the "disk_id" edge.
-func (hq *HostQuery) QueryDiskID() *DiskQuery {
+// QueryDisk chains the current query on the "disk" edge.
+func (hq *HostQuery) QueryDisk() *DiskQuery {
 	query := &DiskQuery{config: hq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := hq.prepareQuery(ctx); err != nil {
@@ -150,7 +150,7 @@ func (hq *HostQuery) QueryDiskID() *DiskQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, selector),
 			sqlgraph.To(disk.Table, disk.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.DiskIDTable, host.DiskIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.DiskTable, host.DiskColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(hq.driver.Dialect(), step)
 		return fromU, nil
@@ -334,15 +334,15 @@ func (hq *HostQuery) Clone() *HostQuery {
 		return nil
 	}
 	return &HostQuery{
-		config:        hq.config,
-		limit:         hq.limit,
-		offset:        hq.offset,
-		order:         append([]OrderFunc{}, hq.order...),
-		predicates:    append([]predicate.Host{}, hq.predicates...),
-		withCPUID:     hq.withCPUID.Clone(),
-		withNetworkID: hq.withNetworkID.Clone(),
-		withNetstatID: hq.withNetstatID.Clone(),
-		withDiskID:    hq.withDiskID.Clone(),
+		config:      hq.config,
+		limit:       hq.limit,
+		offset:      hq.offset,
+		order:       append([]OrderFunc{}, hq.order...),
+		predicates:  append([]predicate.Host{}, hq.predicates...),
+		withCPU:     hq.withCPU.Clone(),
+		withNetwork: hq.withNetwork.Clone(),
+		withNetstat: hq.withNetstat.Clone(),
+		withDisk:    hq.withDisk.Clone(),
 		// clone intermediate query.
 		sql:    hq.sql.Clone(),
 		path:   hq.path,
@@ -350,47 +350,47 @@ func (hq *HostQuery) Clone() *HostQuery {
 	}
 }
 
-// WithCPUID tells the query-builder to eager-load the nodes that are connected to
-// the "cpu_id" edge. The optional arguments are used to configure the query builder of the edge.
-func (hq *HostQuery) WithCPUID(opts ...func(*CPUQuery)) *HostQuery {
+// WithCPU tells the query-builder to eager-load the nodes that are connected to
+// the "cpu" edge. The optional arguments are used to configure the query builder of the edge.
+func (hq *HostQuery) WithCPU(opts ...func(*CPUQuery)) *HostQuery {
 	query := &CPUQuery{config: hq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	hq.withCPUID = query
+	hq.withCPU = query
 	return hq
 }
 
-// WithNetworkID tells the query-builder to eager-load the nodes that are connected to
-// the "network_id" edge. The optional arguments are used to configure the query builder of the edge.
-func (hq *HostQuery) WithNetworkID(opts ...func(*NetworkQuery)) *HostQuery {
+// WithNetwork tells the query-builder to eager-load the nodes that are connected to
+// the "network" edge. The optional arguments are used to configure the query builder of the edge.
+func (hq *HostQuery) WithNetwork(opts ...func(*NetworkQuery)) *HostQuery {
 	query := &NetworkQuery{config: hq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	hq.withNetworkID = query
+	hq.withNetwork = query
 	return hq
 }
 
-// WithNetstatID tells the query-builder to eager-load the nodes that are connected to
-// the "netstat_id" edge. The optional arguments are used to configure the query builder of the edge.
-func (hq *HostQuery) WithNetstatID(opts ...func(*NetstatQuery)) *HostQuery {
+// WithNetstat tells the query-builder to eager-load the nodes that are connected to
+// the "netstat" edge. The optional arguments are used to configure the query builder of the edge.
+func (hq *HostQuery) WithNetstat(opts ...func(*NetstatQuery)) *HostQuery {
 	query := &NetstatQuery{config: hq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	hq.withNetstatID = query
+	hq.withNetstat = query
 	return hq
 }
 
-// WithDiskID tells the query-builder to eager-load the nodes that are connected to
-// the "disk_id" edge. The optional arguments are used to configure the query builder of the edge.
-func (hq *HostQuery) WithDiskID(opts ...func(*DiskQuery)) *HostQuery {
+// WithDisk tells the query-builder to eager-load the nodes that are connected to
+// the "disk" edge. The optional arguments are used to configure the query builder of the edge.
+func (hq *HostQuery) WithDisk(opts ...func(*DiskQuery)) *HostQuery {
 	query := &DiskQuery{config: hq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	hq.withDiskID = query
+	hq.withDisk = query
 	return hq
 }
 
@@ -460,10 +460,10 @@ func (hq *HostQuery) sqlAll(ctx context.Context) ([]*Host, error) {
 		nodes       = []*Host{}
 		_spec       = hq.querySpec()
 		loadedTypes = [4]bool{
-			hq.withCPUID != nil,
-			hq.withNetworkID != nil,
-			hq.withNetstatID != nil,
-			hq.withDiskID != nil,
+			hq.withCPU != nil,
+			hq.withNetwork != nil,
+			hq.withNetstat != nil,
+			hq.withDisk != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -486,119 +486,119 @@ func (hq *HostQuery) sqlAll(ctx context.Context) ([]*Host, error) {
 		return nodes, nil
 	}
 
-	if query := hq.withCPUID; query != nil {
+	if query := hq.withCPU; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[string]*Host)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.CPUID = []*Cpu{}
+			nodes[i].Edges.CPU = []*Cpu{}
 		}
 		query.withFKs = true
 		query.Where(predicate.Cpu(func(s *sql.Selector) {
-			s.Where(sql.InValues(host.CPUIDColumn, fks...))
+			s.Where(sql.InValues(host.CPUColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.host_cpu_id
+			fk := n.host_cpu
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "host_cpu_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "host_cpu" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_cpu_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_cpu" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.CPUID = append(node.Edges.CPUID, n)
+			node.Edges.CPU = append(node.Edges.CPU, n)
 		}
 	}
 
-	if query := hq.withNetworkID; query != nil {
+	if query := hq.withNetwork; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[string]*Host)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.NetworkID = []*Network{}
+			nodes[i].Edges.Network = []*Network{}
 		}
 		query.withFKs = true
 		query.Where(predicate.Network(func(s *sql.Selector) {
-			s.Where(sql.InValues(host.NetworkIDColumn, fks...))
+			s.Where(sql.InValues(host.NetworkColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.host_network_id
+			fk := n.host_network
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "host_network_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "host_network" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_network_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_network" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.NetworkID = append(node.Edges.NetworkID, n)
+			node.Edges.Network = append(node.Edges.Network, n)
 		}
 	}
 
-	if query := hq.withNetstatID; query != nil {
+	if query := hq.withNetstat; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[string]*Host)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.NetstatID = []*Netstat{}
+			nodes[i].Edges.Netstat = []*Netstat{}
 		}
 		query.withFKs = true
 		query.Where(predicate.Netstat(func(s *sql.Selector) {
-			s.Where(sql.InValues(host.NetstatIDColumn, fks...))
+			s.Where(sql.InValues(host.NetstatColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.host_netstat_id
+			fk := n.host_netstat
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "host_netstat_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "host_netstat" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_netstat_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_netstat" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.NetstatID = append(node.Edges.NetstatID, n)
+			node.Edges.Netstat = append(node.Edges.Netstat, n)
 		}
 	}
 
-	if query := hq.withDiskID; query != nil {
+	if query := hq.withDisk; query != nil {
 		fks := make([]driver.Value, 0, len(nodes))
 		nodeids := make(map[string]*Host)
 		for i := range nodes {
 			fks = append(fks, nodes[i].ID)
 			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.DiskID = []*Disk{}
+			nodes[i].Edges.Disk = []*Disk{}
 		}
 		query.withFKs = true
 		query.Where(predicate.Disk(func(s *sql.Selector) {
-			s.Where(sql.InValues(host.DiskIDColumn, fks...))
+			s.Where(sql.InValues(host.DiskColumn, fks...))
 		}))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.host_disk_id
+			fk := n.host_disk
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "host_disk_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "host_disk" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_disk_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_disk" returned %v for node %v`, *fk, n.ID)
 			}
-			node.Edges.DiskID = append(node.Edges.DiskID, n)
+			node.Edges.Disk = append(node.Edges.Disk, n)
 		}
 	}
 

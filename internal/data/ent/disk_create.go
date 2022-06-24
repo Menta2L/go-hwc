@@ -10,7 +10,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/disk"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 )
@@ -28,21 +27,21 @@ func (dc *DiskCreate) SetDevice(s string) *DiskCreate {
 	return dc
 }
 
-// SetMount sets the "mount" field.
-func (dc *DiskCreate) SetMount(s string) *DiskCreate {
-	dc.mutation.SetMount(s)
+// SetMountpoint sets the "Mountpoint" field.
+func (dc *DiskCreate) SetMountpoint(s string) *DiskCreate {
+	dc.mutation.SetMountpoint(s)
 	return dc
 }
 
-// SetFsType sets the "fs_type" field.
-func (dc *DiskCreate) SetFsType(s string) *DiskCreate {
-	dc.mutation.SetFsType(s)
+// SetFstype sets the "Fstype" field.
+func (dc *DiskCreate) SetFstype(s string) *DiskCreate {
+	dc.mutation.SetFstype(s)
 	return dc
 }
 
 // SetOpts sets the "opts" field.
-func (dc *DiskCreate) SetOpts(pa *pgtype.TextArray) *DiskCreate {
-	dc.mutation.SetOpts(pa)
+func (dc *DiskCreate) SetOpts(s []string) *DiskCreate {
+	dc.mutation.SetOpts(s)
 	return dc
 }
 
@@ -171,14 +170,11 @@ func (dc *DiskCreate) check() error {
 	if _, ok := dc.mutation.Device(); !ok {
 		return &ValidationError{Name: "device", err: errors.New(`ent: missing required field "Disk.device"`)}
 	}
-	if _, ok := dc.mutation.Mount(); !ok {
-		return &ValidationError{Name: "mount", err: errors.New(`ent: missing required field "Disk.mount"`)}
+	if _, ok := dc.mutation.Mountpoint(); !ok {
+		return &ValidationError{Name: "Mountpoint", err: errors.New(`ent: missing required field "Disk.Mountpoint"`)}
 	}
-	if _, ok := dc.mutation.FsType(); !ok {
-		return &ValidationError{Name: "fs_type", err: errors.New(`ent: missing required field "Disk.fs_type"`)}
-	}
-	if _, ok := dc.mutation.Opts(); !ok {
-		return &ValidationError{Name: "opts", err: errors.New(`ent: missing required field "Disk.opts"`)}
+	if _, ok := dc.mutation.Fstype(); !ok {
+		return &ValidationError{Name: "Fstype", err: errors.New(`ent: missing required field "Disk.Fstype"`)}
 	}
 	if _, ok := dc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Disk.created_at"`)}
@@ -224,25 +220,25 @@ func (dc *DiskCreate) createSpec() (*Disk, *sqlgraph.CreateSpec) {
 		})
 		_node.Device = value
 	}
-	if value, ok := dc.mutation.Mount(); ok {
+	if value, ok := dc.mutation.Mountpoint(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldMount,
+			Column: disk.FieldMountpoint,
 		})
-		_node.Mount = value
+		_node.Mountpoint = value
 	}
-	if value, ok := dc.mutation.FsType(); ok {
+	if value, ok := dc.mutation.Fstype(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldFsType,
+			Column: disk.FieldFstype,
 		})
-		_node.FsType = value
+		_node.Fstype = value
 	}
 	if value, ok := dc.mutation.Opts(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: disk.FieldOpts,
 		})
@@ -281,7 +277,7 @@ func (dc *DiskCreate) createSpec() (*Disk, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.host_disk_id = &nodes[0]
+		_node.host_disk = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

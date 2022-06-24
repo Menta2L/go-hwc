@@ -386,10 +386,10 @@ func (nq *NetstatQuery) sqlAll(ctx context.Context) ([]*Netstat, error) {
 		ids := make([]string, 0, len(nodes))
 		nodeids := make(map[string][]*Netstat)
 		for i := range nodes {
-			if nodes[i].host_netstat_id == nil {
+			if nodes[i].host_netstat == nil {
 				continue
 			}
-			fk := *nodes[i].host_netstat_id
+			fk := *nodes[i].host_netstat
 			if _, ok := nodeids[fk]; !ok {
 				ids = append(ids, fk)
 			}
@@ -403,7 +403,7 @@ func (nq *NetstatQuery) sqlAll(ctx context.Context) ([]*Netstat, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_netstat_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_netstat" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.HostID = n

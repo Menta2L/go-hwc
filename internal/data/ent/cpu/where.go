@@ -93,6 +93,13 @@ func IDLTE(id int) predicate.Cpu {
 	})
 }
 
+// CPU applies equality check predicate on the "CPU" field. It's identical to CPUEQ.
+func CPU(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCPU), v))
+	})
+}
+
 // VendorID applies equality check predicate on the "vendor_id" field. It's identical to VendorIDEQ.
 func VendorID(v string) predicate.Cpu {
 	return predicate.Cpu(func(s *sql.Selector) {
@@ -132,6 +139,82 @@ func CreatedAt(v time.Time) predicate.Cpu {
 func UpdatedAt(v time.Time) predicate.Cpu {
 	return predicate.Cpu(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldUpdatedAt), v))
+	})
+}
+
+// CPUEQ applies the EQ predicate on the "CPU" field.
+func CPUEQ(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldCPU), v))
+	})
+}
+
+// CPUNEQ applies the NEQ predicate on the "CPU" field.
+func CPUNEQ(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldCPU), v))
+	})
+}
+
+// CPUIn applies the In predicate on the "CPU" field.
+func CPUIn(vs ...int) predicate.Cpu {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cpu(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldCPU), v...))
+	})
+}
+
+// CPUNotIn applies the NotIn predicate on the "CPU" field.
+func CPUNotIn(vs ...int) predicate.Cpu {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Cpu(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldCPU), v...))
+	})
+}
+
+// CPUGT applies the GT predicate on the "CPU" field.
+func CPUGT(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldCPU), v))
+	})
+}
+
+// CPUGTE applies the GTE predicate on the "CPU" field.
+func CPUGTE(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldCPU), v))
+	})
+}
+
+// CPULT applies the LT predicate on the "CPU" field.
+func CPULT(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldCPU), v))
+	})
+}
+
+// CPULTE applies the LTE predicate on the "CPU" field.
+func CPULTE(v int) predicate.Cpu {
+	return predicate.Cpu(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldCPU), v))
 	})
 }
 

@@ -3,12 +3,12 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 	"github.com/menta2l/go-hwc/internal/data/ent/network"
 )
@@ -18,26 +18,26 @@ type Network struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Idx holds the value of the "idx" field.
-	Idx int `json:"idx,omitempty"`
-	// Mtu holds the value of the "mtu" field.
-	Mtu int `json:"mtu,omitempty"`
+	// Index holds the value of the "Index" field.
+	Index int `json:"Index,omitempty"`
+	// MTU holds the value of the "MTU" field.
+	MTU int `json:"MTU,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// MAC holds the value of the "mac" field.
-	MAC string `json:"mac,omitempty"`
-	// Flags holds the value of the "flags" field.
-	Flags *pgtype.TextArray `json:"flags,omitempty"`
+	// HardwareAddr holds the value of the "HardwareAddr" field.
+	HardwareAddr string `json:"HardwareAddr,omitempty"`
+	// Flags holds the value of the "Flags" field.
+	Flags []string `json:"Flags,omitempty"`
 	// Addrs holds the value of the "addrs" field.
-	Addrs *pgtype.TextArray `json:"addrs,omitempty"`
+	Addrs []string `json:"addrs,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the NetworkQuery when eager-loading is set.
-	Edges           NetworkEdges `json:"edges"`
-	host_network_id *string
+	Edges        NetworkEdges `json:"edges"`
+	host_network *string
 }
 
 // NetworkEdges holds the relations/edges for other nodes in the graph.
@@ -69,14 +69,14 @@ func (*Network) scanValues(columns []string) ([]interface{}, error) {
 	for i := range columns {
 		switch columns[i] {
 		case network.FieldFlags, network.FieldAddrs:
-			values[i] = &sql.NullScanner{S: new(pgtype.TextArray)}
-		case network.FieldID, network.FieldIdx, network.FieldMtu:
+			values[i] = new([]byte)
+		case network.FieldID, network.FieldIndex, network.FieldMTU:
 			values[i] = new(sql.NullInt64)
-		case network.FieldName, network.FieldMAC:
+		case network.FieldName, network.FieldHardwareAddr:
 			values[i] = new(sql.NullString)
 		case network.FieldCreatedAt, network.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
-		case network.ForeignKeys[0]: // host_network_id
+		case network.ForeignKeys[0]: // host_network
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Network", columns[i])
@@ -99,17 +99,17 @@ func (n *Network) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			n.ID = int(value.Int64)
-		case network.FieldIdx:
+		case network.FieldIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field idx", values[i])
+				return fmt.Errorf("unexpected type %T for field Index", values[i])
 			} else if value.Valid {
-				n.Idx = int(value.Int64)
+				n.Index = int(value.Int64)
 			}
-		case network.FieldMtu:
+		case network.FieldMTU:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field mtu", values[i])
+				return fmt.Errorf("unexpected type %T for field MTU", values[i])
 			} else if value.Valid {
-				n.Mtu = int(value.Int64)
+				n.MTU = int(value.Int64)
 			}
 		case network.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -117,23 +117,27 @@ func (n *Network) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				n.Name = value.String
 			}
-		case network.FieldMAC:
+		case network.FieldHardwareAddr:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field mac", values[i])
+				return fmt.Errorf("unexpected type %T for field HardwareAddr", values[i])
 			} else if value.Valid {
-				n.MAC = value.String
+				n.HardwareAddr = value.String
 			}
 		case network.FieldFlags:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field flags", values[i])
-			} else if value.Valid {
-				n.Flags = value.S.(*pgtype.TextArray)
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field Flags", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &n.Flags); err != nil {
+					return fmt.Errorf("unmarshal field Flags: %w", err)
+				}
 			}
 		case network.FieldAddrs:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field addrs", values[i])
-			} else if value.Valid {
-				n.Addrs = value.S.(*pgtype.TextArray)
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &n.Addrs); err != nil {
+					return fmt.Errorf("unmarshal field addrs: %w", err)
+				}
 			}
 		case network.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -149,10 +153,10 @@ func (n *Network) assignValues(columns []string, values []interface{}) error {
 			}
 		case network.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field host_network_id", values[i])
+				return fmt.Errorf("unexpected type %T for field host_network", values[i])
 			} else if value.Valid {
-				n.host_network_id = new(string)
-				*n.host_network_id = value.String
+				n.host_network = new(string)
+				*n.host_network = value.String
 			}
 		}
 	}
@@ -187,22 +191,18 @@ func (n *Network) String() string {
 	var builder strings.Builder
 	builder.WriteString("Network(")
 	builder.WriteString(fmt.Sprintf("id=%v", n.ID))
-	builder.WriteString(", idx=")
-	builder.WriteString(fmt.Sprintf("%v", n.Idx))
-	builder.WriteString(", mtu=")
-	builder.WriteString(fmt.Sprintf("%v", n.Mtu))
+	builder.WriteString(", Index=")
+	builder.WriteString(fmt.Sprintf("%v", n.Index))
+	builder.WriteString(", MTU=")
+	builder.WriteString(fmt.Sprintf("%v", n.MTU))
 	builder.WriteString(", name=")
 	builder.WriteString(n.Name)
-	builder.WriteString(", mac=")
-	builder.WriteString(n.MAC)
-	if v := n.Flags; v != nil {
-		builder.WriteString(", flags=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
-	if v := n.Addrs; v != nil {
-		builder.WriteString(", addrs=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
+	builder.WriteString(", HardwareAddr=")
+	builder.WriteString(n.HardwareAddr)
+	builder.WriteString(", Flags=")
+	builder.WriteString(fmt.Sprintf("%v", n.Flags))
+	builder.WriteString(", addrs=")
+	builder.WriteString(fmt.Sprintf("%v", n.Addrs))
 	builder.WriteString(", created_at=")
 	builder.WriteString(n.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", updated_at=")

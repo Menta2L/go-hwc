@@ -1321,25 +1321,25 @@ func UpdatedAtLTE(v time.Time) predicate.Host {
 	})
 }
 
-// HasCPUID applies the HasEdge predicate on the "cpu_id" edge.
-func HasCPUID() predicate.Host {
+// HasCPU applies the HasEdge predicate on the "cpu" edge.
+func HasCPU() predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CPUIDTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CPUIDTable, CPUIDColumn),
+			sqlgraph.To(CPUTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CPUTable, CPUColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasCPUIDWith applies the HasEdge predicate on the "cpu_id" edge with a given conditions (other predicates).
-func HasCPUIDWith(preds ...predicate.Cpu) predicate.Host {
+// HasCPUWith applies the HasEdge predicate on the "cpu" edge with a given conditions (other predicates).
+func HasCPUWith(preds ...predicate.Cpu) predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(CPUIDInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, CPUIDTable, CPUIDColumn),
+			sqlgraph.To(CPUInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, CPUTable, CPUColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1349,25 +1349,25 @@ func HasCPUIDWith(preds ...predicate.Cpu) predicate.Host {
 	})
 }
 
-// HasNetworkID applies the HasEdge predicate on the "network_id" edge.
-func HasNetworkID() predicate.Host {
+// HasNetwork applies the HasEdge predicate on the "network" edge.
+func HasNetwork() predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NetworkIDTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NetworkIDTable, NetworkIDColumn),
+			sqlgraph.To(NetworkTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, NetworkTable, NetworkColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasNetworkIDWith applies the HasEdge predicate on the "network_id" edge with a given conditions (other predicates).
-func HasNetworkIDWith(preds ...predicate.Network) predicate.Host {
+// HasNetworkWith applies the HasEdge predicate on the "network" edge with a given conditions (other predicates).
+func HasNetworkWith(preds ...predicate.Network) predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NetworkIDInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NetworkIDTable, NetworkIDColumn),
+			sqlgraph.To(NetworkInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, NetworkTable, NetworkColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1377,25 +1377,25 @@ func HasNetworkIDWith(preds ...predicate.Network) predicate.Host {
 	})
 }
 
-// HasNetstatID applies the HasEdge predicate on the "netstat_id" edge.
-func HasNetstatID() predicate.Host {
+// HasNetstat applies the HasEdge predicate on the "netstat" edge.
+func HasNetstat() predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NetstatIDTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NetstatIDTable, NetstatIDColumn),
+			sqlgraph.To(NetstatTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, NetstatTable, NetstatColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasNetstatIDWith applies the HasEdge predicate on the "netstat_id" edge with a given conditions (other predicates).
-func HasNetstatIDWith(preds ...predicate.Netstat) predicate.Host {
+// HasNetstatWith applies the HasEdge predicate on the "netstat" edge with a given conditions (other predicates).
+func HasNetstatWith(preds ...predicate.Netstat) predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(NetstatIDInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, NetstatIDTable, NetstatIDColumn),
+			sqlgraph.To(NetstatInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, NetstatTable, NetstatColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
@@ -1405,25 +1405,25 @@ func HasNetstatIDWith(preds ...predicate.Netstat) predicate.Host {
 	})
 }
 
-// HasDiskID applies the HasEdge predicate on the "disk_id" edge.
-func HasDiskID() predicate.Host {
+// HasDisk applies the HasEdge predicate on the "disk" edge.
+func HasDisk() predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DiskIDTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DiskIDTable, DiskIDColumn),
+			sqlgraph.To(DiskTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DiskTable, DiskColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasDiskIDWith applies the HasEdge predicate on the "disk_id" edge with a given conditions (other predicates).
-func HasDiskIDWith(preds ...predicate.Disk) predicate.Host {
+// HasDiskWith applies the HasEdge predicate on the "disk" edge with a given conditions (other predicates).
+func HasDiskWith(preds ...predicate.Disk) predicate.Host {
 	return predicate.Host(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(DiskIDInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, DiskIDTable, DiskIDColumn),
+			sqlgraph.To(DiskInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, DiskTable, DiskColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -20,11 +20,11 @@ func init() {
 	cpuFields := schema.Cpu{}.Fields()
 	_ = cpuFields
 	// cpuDescCreatedAt is the schema descriptor for created_at field.
-	cpuDescCreatedAt := cpuFields[4].Descriptor()
+	cpuDescCreatedAt := cpuFields[5].Descriptor()
 	// cpu.DefaultCreatedAt holds the default value on creation for the created_at field.
 	cpu.DefaultCreatedAt = cpuDescCreatedAt.Default.(func() time.Time)
 	// cpuDescUpdatedAt is the schema descriptor for updated_at field.
-	cpuDescUpdatedAt := cpuFields[5].Descriptor()
+	cpuDescUpdatedAt := cpuFields[6].Descriptor()
 	// cpu.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	cpu.DefaultUpdatedAt = cpuDescUpdatedAt.Default.(func() time.Time)
 	diskFields := schema.Disk{}.Fields()

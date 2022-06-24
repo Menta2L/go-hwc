@@ -292,12 +292,12 @@ func (nq *NetworkQuery) WithHostID(opts ...func(*HostQuery)) *NetworkQuery {
 // Example:
 //
 //	var v []struct {
-//		Idx int `json:"idx,omitempty"`
+//		Index int `json:"Index,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Network.Query().
-//		GroupBy(network.FieldIdx).
+//		GroupBy(network.FieldIndex).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -319,11 +319,11 @@ func (nq *NetworkQuery) GroupBy(field string, fields ...string) *NetworkGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Idx int `json:"idx,omitempty"`
+//		Index int `json:"Index,omitempty"`
 //	}
 //
 //	client.Network.Query().
-//		Select(network.FieldIdx).
+//		Select(network.FieldIndex).
 //		Scan(ctx, &v)
 //
 func (nq *NetworkQuery) Select(fields ...string) *NetworkSelect {
@@ -386,10 +386,10 @@ func (nq *NetworkQuery) sqlAll(ctx context.Context) ([]*Network, error) {
 		ids := make([]string, 0, len(nodes))
 		nodeids := make(map[string][]*Network)
 		for i := range nodes {
-			if nodes[i].host_network_id == nil {
+			if nodes[i].host_network == nil {
 				continue
 			}
-			fk := *nodes[i].host_network_id
+			fk := *nodes[i].host_network
 			if _, ok := nodeids[fk]; !ok {
 				ids = append(ids, fk)
 			}
@@ -403,7 +403,7 @@ func (nq *NetworkQuery) sqlAll(ctx context.Context) ([]*Network, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_network_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_network" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.HostID = n

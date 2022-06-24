@@ -386,10 +386,10 @@ func (dq *DiskQuery) sqlAll(ctx context.Context) ([]*Disk, error) {
 		ids := make([]string, 0, len(nodes))
 		nodeids := make(map[string][]*Disk)
 		for i := range nodes {
-			if nodes[i].host_disk_id == nil {
+			if nodes[i].host_disk == nil {
 				continue
 			}
-			fk := *nodes[i].host_disk_id
+			fk := *nodes[i].host_disk
 			if _, ok := nodeids[fk]; !ok {
 				ids = append(ids, fk)
 			}
@@ -403,7 +403,7 @@ func (dq *DiskQuery) sqlAll(ctx context.Context) ([]*Disk, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "host_disk_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "host_disk" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.HostID = n

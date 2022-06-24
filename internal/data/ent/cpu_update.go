@@ -29,6 +29,19 @@ func (cu *CPUUpdate) Where(ps ...predicate.Cpu) *CPUUpdate {
 	return cu
 }
 
+// SetCPU sets the "CPU" field.
+func (cu *CPUUpdate) SetCPU(i int) *CPUUpdate {
+	cu.mutation.ResetCPU()
+	cu.mutation.SetCPU(i)
+	return cu
+}
+
+// AddCPU adds i to the "CPU" field.
+func (cu *CPUUpdate) AddCPU(i int) *CPUUpdate {
+	cu.mutation.AddCPU(i)
+	return cu
+}
+
 // SetVendorID sets the "vendor_id" field.
 func (cu *CPUUpdate) SetVendorID(s string) *CPUUpdate {
 	cu.mutation.SetVendorID(s)
@@ -183,6 +196,20 @@ func (cu *CPUUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	if value, ok := cu.mutation.CPU(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cpu.FieldCPU,
+		})
+	}
+	if value, ok := cu.mutation.AddedCPU(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cpu.FieldCPU,
+		})
+	}
 	if value, ok := cu.mutation.VendorID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -277,6 +304,19 @@ type CPUUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *CPUMutation
+}
+
+// SetCPU sets the "CPU" field.
+func (cuo *CPUUpdateOne) SetCPU(i int) *CPUUpdateOne {
+	cuo.mutation.ResetCPU()
+	cuo.mutation.SetCPU(i)
+	return cuo
+}
+
+// AddCPU adds i to the "CPU" field.
+func (cuo *CPUUpdateOne) AddCPU(i int) *CPUUpdateOne {
+	cuo.mutation.AddCPU(i)
+	return cuo
 }
 
 // SetVendorID sets the "vendor_id" field.
@@ -456,6 +496,20 @@ func (cuo *CPUUpdateOne) sqlSave(ctx context.Context) (_node *Cpu, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := cuo.mutation.CPU(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cpu.FieldCPU,
+		})
+	}
+	if value, ok := cuo.mutation.AddedCPU(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: cpu.FieldCPU,
+		})
 	}
 	if value, ok := cuo.mutation.VendorID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{

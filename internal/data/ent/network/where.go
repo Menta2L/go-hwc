@@ -7,7 +7,6 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/predicate"
 )
 
@@ -94,17 +93,17 @@ func IDLTE(id int) predicate.Network {
 	})
 }
 
-// Idx applies equality check predicate on the "idx" field. It's identical to IdxEQ.
-func Idx(v int) predicate.Network {
+// Index applies equality check predicate on the "Index" field. It's identical to IndexEQ.
+func Index(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIdx), v))
+		s.Where(sql.EQ(s.C(FieldIndex), v))
 	})
 }
 
-// Mtu applies equality check predicate on the "mtu" field. It's identical to MtuEQ.
-func Mtu(v int) predicate.Network {
+// MTU applies equality check predicate on the "MTU" field. It's identical to MTUEQ.
+func MTU(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMtu), v))
+		s.Where(sql.EQ(s.C(FieldMTU), v))
 	})
 }
 
@@ -115,24 +114,10 @@ func Name(v string) predicate.Network {
 	})
 }
 
-// MAC applies equality check predicate on the "mac" field. It's identical to MACEQ.
-func MAC(v string) predicate.Network {
+// HardwareAddr applies equality check predicate on the "HardwareAddr" field. It's identical to HardwareAddrEQ.
+func HardwareAddr(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMAC), v))
-	})
-}
-
-// Flags applies equality check predicate on the "flags" field. It's identical to FlagsEQ.
-func Flags(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFlags), v))
-	})
-}
-
-// Addrs applies equality check predicate on the "addrs" field. It's identical to AddrsEQ.
-func Addrs(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddrs), v))
+		s.Where(sql.EQ(s.C(FieldHardwareAddr), v))
 	})
 }
 
@@ -150,22 +135,22 @@ func UpdatedAt(v time.Time) predicate.Network {
 	})
 }
 
-// IdxEQ applies the EQ predicate on the "idx" field.
-func IdxEQ(v int) predicate.Network {
+// IndexEQ applies the EQ predicate on the "Index" field.
+func IndexEQ(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIdx), v))
+		s.Where(sql.EQ(s.C(FieldIndex), v))
 	})
 }
 
-// IdxNEQ applies the NEQ predicate on the "idx" field.
-func IdxNEQ(v int) predicate.Network {
+// IndexNEQ applies the NEQ predicate on the "Index" field.
+func IndexNEQ(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldIdx), v))
+		s.Where(sql.NEQ(s.C(FieldIndex), v))
 	})
 }
 
-// IdxIn applies the In predicate on the "idx" field.
-func IdxIn(vs ...int) predicate.Network {
+// IndexIn applies the In predicate on the "Index" field.
+func IndexIn(vs ...int) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -177,12 +162,12 @@ func IdxIn(vs ...int) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldIdx), v...))
+		s.Where(sql.In(s.C(FieldIndex), v...))
 	})
 }
 
-// IdxNotIn applies the NotIn predicate on the "idx" field.
-func IdxNotIn(vs ...int) predicate.Network {
+// IndexNotIn applies the NotIn predicate on the "Index" field.
+func IndexNotIn(vs ...int) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -194,54 +179,54 @@ func IdxNotIn(vs ...int) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldIdx), v...))
+		s.Where(sql.NotIn(s.C(FieldIndex), v...))
 	})
 }
 
-// IdxGT applies the GT predicate on the "idx" field.
-func IdxGT(v int) predicate.Network {
+// IndexGT applies the GT predicate on the "Index" field.
+func IndexGT(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldIdx), v))
+		s.Where(sql.GT(s.C(FieldIndex), v))
 	})
 }
 
-// IdxGTE applies the GTE predicate on the "idx" field.
-func IdxGTE(v int) predicate.Network {
+// IndexGTE applies the GTE predicate on the "Index" field.
+func IndexGTE(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldIdx), v))
+		s.Where(sql.GTE(s.C(FieldIndex), v))
 	})
 }
 
-// IdxLT applies the LT predicate on the "idx" field.
-func IdxLT(v int) predicate.Network {
+// IndexLT applies the LT predicate on the "Index" field.
+func IndexLT(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldIdx), v))
+		s.Where(sql.LT(s.C(FieldIndex), v))
 	})
 }
 
-// IdxLTE applies the LTE predicate on the "idx" field.
-func IdxLTE(v int) predicate.Network {
+// IndexLTE applies the LTE predicate on the "Index" field.
+func IndexLTE(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldIdx), v))
+		s.Where(sql.LTE(s.C(FieldIndex), v))
 	})
 }
 
-// MtuEQ applies the EQ predicate on the "mtu" field.
-func MtuEQ(v int) predicate.Network {
+// MTUEQ applies the EQ predicate on the "MTU" field.
+func MTUEQ(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMtu), v))
+		s.Where(sql.EQ(s.C(FieldMTU), v))
 	})
 }
 
-// MtuNEQ applies the NEQ predicate on the "mtu" field.
-func MtuNEQ(v int) predicate.Network {
+// MTUNEQ applies the NEQ predicate on the "MTU" field.
+func MTUNEQ(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMtu), v))
+		s.Where(sql.NEQ(s.C(FieldMTU), v))
 	})
 }
 
-// MtuIn applies the In predicate on the "mtu" field.
-func MtuIn(vs ...int) predicate.Network {
+// MTUIn applies the In predicate on the "MTU" field.
+func MTUIn(vs ...int) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -253,12 +238,12 @@ func MtuIn(vs ...int) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldMtu), v...))
+		s.Where(sql.In(s.C(FieldMTU), v...))
 	})
 }
 
-// MtuNotIn applies the NotIn predicate on the "mtu" field.
-func MtuNotIn(vs ...int) predicate.Network {
+// MTUNotIn applies the NotIn predicate on the "MTU" field.
+func MTUNotIn(vs ...int) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -270,35 +255,35 @@ func MtuNotIn(vs ...int) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldMtu), v...))
+		s.Where(sql.NotIn(s.C(FieldMTU), v...))
 	})
 }
 
-// MtuGT applies the GT predicate on the "mtu" field.
-func MtuGT(v int) predicate.Network {
+// MTUGT applies the GT predicate on the "MTU" field.
+func MTUGT(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMtu), v))
+		s.Where(sql.GT(s.C(FieldMTU), v))
 	})
 }
 
-// MtuGTE applies the GTE predicate on the "mtu" field.
-func MtuGTE(v int) predicate.Network {
+// MTUGTE applies the GTE predicate on the "MTU" field.
+func MTUGTE(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMtu), v))
+		s.Where(sql.GTE(s.C(FieldMTU), v))
 	})
 }
 
-// MtuLT applies the LT predicate on the "mtu" field.
-func MtuLT(v int) predicate.Network {
+// MTULT applies the LT predicate on the "MTU" field.
+func MTULT(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMtu), v))
+		s.Where(sql.LT(s.C(FieldMTU), v))
 	})
 }
 
-// MtuLTE applies the LTE predicate on the "mtu" field.
-func MtuLTE(v int) predicate.Network {
+// MTULTE applies the LTE predicate on the "MTU" field.
+func MTULTE(v int) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMtu), v))
+		s.Where(sql.LTE(s.C(FieldMTU), v))
 	})
 }
 
@@ -413,22 +398,22 @@ func NameContainsFold(v string) predicate.Network {
 	})
 }
 
-// MACEQ applies the EQ predicate on the "mac" field.
-func MACEQ(v string) predicate.Network {
+// HardwareAddrEQ applies the EQ predicate on the "HardwareAddr" field.
+func HardwareAddrEQ(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldMAC), v))
+		s.Where(sql.EQ(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACNEQ applies the NEQ predicate on the "mac" field.
-func MACNEQ(v string) predicate.Network {
+// HardwareAddrNEQ applies the NEQ predicate on the "HardwareAddr" field.
+func HardwareAddrNEQ(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldMAC), v))
+		s.Where(sql.NEQ(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACIn applies the In predicate on the "mac" field.
-func MACIn(vs ...string) predicate.Network {
+// HardwareAddrIn applies the In predicate on the "HardwareAddr" field.
+func HardwareAddrIn(vs ...string) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -440,12 +425,12 @@ func MACIn(vs ...string) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldMAC), v...))
+		s.Where(sql.In(s.C(FieldHardwareAddr), v...))
 	})
 }
 
-// MACNotIn applies the NotIn predicate on the "mac" field.
-func MACNotIn(vs ...string) predicate.Network {
+// HardwareAddrNotIn applies the NotIn predicate on the "HardwareAddr" field.
+func HardwareAddrNotIn(vs ...string) predicate.Network {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -457,236 +442,84 @@ func MACNotIn(vs ...string) predicate.Network {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldMAC), v...))
+		s.Where(sql.NotIn(s.C(FieldHardwareAddr), v...))
 	})
 }
 
-// MACGT applies the GT predicate on the "mac" field.
-func MACGT(v string) predicate.Network {
+// HardwareAddrGT applies the GT predicate on the "HardwareAddr" field.
+func HardwareAddrGT(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldMAC), v))
+		s.Where(sql.GT(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACGTE applies the GTE predicate on the "mac" field.
-func MACGTE(v string) predicate.Network {
+// HardwareAddrGTE applies the GTE predicate on the "HardwareAddr" field.
+func HardwareAddrGTE(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldMAC), v))
+		s.Where(sql.GTE(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACLT applies the LT predicate on the "mac" field.
-func MACLT(v string) predicate.Network {
+// HardwareAddrLT applies the LT predicate on the "HardwareAddr" field.
+func HardwareAddrLT(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldMAC), v))
+		s.Where(sql.LT(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACLTE applies the LTE predicate on the "mac" field.
-func MACLTE(v string) predicate.Network {
+// HardwareAddrLTE applies the LTE predicate on the "HardwareAddr" field.
+func HardwareAddrLTE(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldMAC), v))
+		s.Where(sql.LTE(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACContains applies the Contains predicate on the "mac" field.
-func MACContains(v string) predicate.Network {
+// HardwareAddrContains applies the Contains predicate on the "HardwareAddr" field.
+func HardwareAddrContains(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldMAC), v))
+		s.Where(sql.Contains(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACHasPrefix applies the HasPrefix predicate on the "mac" field.
-func MACHasPrefix(v string) predicate.Network {
+// HardwareAddrHasPrefix applies the HasPrefix predicate on the "HardwareAddr" field.
+func HardwareAddrHasPrefix(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldMAC), v))
+		s.Where(sql.HasPrefix(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACHasSuffix applies the HasSuffix predicate on the "mac" field.
-func MACHasSuffix(v string) predicate.Network {
+// HardwareAddrHasSuffix applies the HasSuffix predicate on the "HardwareAddr" field.
+func HardwareAddrHasSuffix(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldMAC), v))
+		s.Where(sql.HasSuffix(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACEqualFold applies the EqualFold predicate on the "mac" field.
-func MACEqualFold(v string) predicate.Network {
+// HardwareAddrEqualFold applies the EqualFold predicate on the "HardwareAddr" field.
+func HardwareAddrEqualFold(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldMAC), v))
+		s.Where(sql.EqualFold(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// MACContainsFold applies the ContainsFold predicate on the "mac" field.
-func MACContainsFold(v string) predicate.Network {
+// HardwareAddrContainsFold applies the ContainsFold predicate on the "HardwareAddr" field.
+func HardwareAddrContainsFold(v string) predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldMAC), v))
+		s.Where(sql.ContainsFold(s.C(FieldHardwareAddr), v))
 	})
 }
 
-// FlagsEQ applies the EQ predicate on the "flags" field.
-func FlagsEQ(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsNEQ applies the NEQ predicate on the "flags" field.
-func FlagsNEQ(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsIn applies the In predicate on the "flags" field.
-func FlagsIn(vs ...*pgtype.TextArray) predicate.Network {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Network(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldFlags), v...))
-	})
-}
-
-// FlagsNotIn applies the NotIn predicate on the "flags" field.
-func FlagsNotIn(vs ...*pgtype.TextArray) predicate.Network {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Network(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldFlags), v...))
-	})
-}
-
-// FlagsGT applies the GT predicate on the "flags" field.
-func FlagsGT(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsGTE applies the GTE predicate on the "flags" field.
-func FlagsGTE(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsLT applies the LT predicate on the "flags" field.
-func FlagsLT(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsLTE applies the LTE predicate on the "flags" field.
-func FlagsLTE(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFlags), v))
-	})
-}
-
-// FlagsIsNil applies the IsNil predicate on the "flags" field.
+// FlagsIsNil applies the IsNil predicate on the "Flags" field.
 func FlagsIsNil() predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
 		s.Where(sql.IsNull(s.C(FieldFlags)))
 	})
 }
 
-// FlagsNotNil applies the NotNil predicate on the "flags" field.
+// FlagsNotNil applies the NotNil predicate on the "Flags" field.
 func FlagsNotNil() predicate.Network {
 	return predicate.Network(func(s *sql.Selector) {
 		s.Where(sql.NotNull(s.C(FieldFlags)))
-	})
-}
-
-// AddrsEQ applies the EQ predicate on the "addrs" field.
-func AddrsEQ(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddrs), v))
-	})
-}
-
-// AddrsNEQ applies the NEQ predicate on the "addrs" field.
-func AddrsNEQ(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAddrs), v))
-	})
-}
-
-// AddrsIn applies the In predicate on the "addrs" field.
-func AddrsIn(vs ...*pgtype.TextArray) predicate.Network {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Network(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldAddrs), v...))
-	})
-}
-
-// AddrsNotIn applies the NotIn predicate on the "addrs" field.
-func AddrsNotIn(vs ...*pgtype.TextArray) predicate.Network {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Network(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldAddrs), v...))
-	})
-}
-
-// AddrsGT applies the GT predicate on the "addrs" field.
-func AddrsGT(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAddrs), v))
-	})
-}
-
-// AddrsGTE applies the GTE predicate on the "addrs" field.
-func AddrsGTE(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAddrs), v))
-	})
-}
-
-// AddrsLT applies the LT predicate on the "addrs" field.
-func AddrsLT(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAddrs), v))
-	})
-}
-
-// AddrsLTE applies the LTE predicate on the "addrs" field.
-func AddrsLTE(v *pgtype.TextArray) predicate.Network {
-	return predicate.Network(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAddrs), v))
 	})
 }
 

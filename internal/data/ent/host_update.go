@@ -114,64 +114,64 @@ func (hu *HostUpdate) SetNillableUpdatedAt(t *time.Time) *HostUpdate {
 	return hu
 }
 
-// AddCPUIDIDs adds the "cpu_id" edge to the Cpu entity by IDs.
-func (hu *HostUpdate) AddCPUIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.AddCPUIDIDs(ids...)
+// AddCPUIDs adds the "cpu" edge to the Cpu entity by IDs.
+func (hu *HostUpdate) AddCPUIDs(ids ...int) *HostUpdate {
+	hu.mutation.AddCPUIDs(ids...)
 	return hu
 }
 
-// AddCPUID adds the "cpu_id" edges to the Cpu entity.
-func (hu *HostUpdate) AddCPUID(c ...*Cpu) *HostUpdate {
+// AddCPU adds the "cpu" edges to the Cpu entity.
+func (hu *HostUpdate) AddCPU(c ...*Cpu) *HostUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return hu.AddCPUIDIDs(ids...)
+	return hu.AddCPUIDs(ids...)
 }
 
-// AddNetworkIDIDs adds the "network_id" edge to the Network entity by IDs.
-func (hu *HostUpdate) AddNetworkIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.AddNetworkIDIDs(ids...)
+// AddNetworkIDs adds the "network" edge to the Network entity by IDs.
+func (hu *HostUpdate) AddNetworkIDs(ids ...int) *HostUpdate {
+	hu.mutation.AddNetworkIDs(ids...)
 	return hu
 }
 
-// AddNetworkID adds the "network_id" edges to the Network entity.
-func (hu *HostUpdate) AddNetworkID(n ...*Network) *HostUpdate {
+// AddNetwork adds the "network" edges to the Network entity.
+func (hu *HostUpdate) AddNetwork(n ...*Network) *HostUpdate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hu.AddNetworkIDIDs(ids...)
+	return hu.AddNetworkIDs(ids...)
 }
 
-// AddNetstatIDIDs adds the "netstat_id" edge to the Netstat entity by IDs.
-func (hu *HostUpdate) AddNetstatIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.AddNetstatIDIDs(ids...)
+// AddNetstatIDs adds the "netstat" edge to the Netstat entity by IDs.
+func (hu *HostUpdate) AddNetstatIDs(ids ...int) *HostUpdate {
+	hu.mutation.AddNetstatIDs(ids...)
 	return hu
 }
 
-// AddNetstatID adds the "netstat_id" edges to the Netstat entity.
-func (hu *HostUpdate) AddNetstatID(n ...*Netstat) *HostUpdate {
+// AddNetstat adds the "netstat" edges to the Netstat entity.
+func (hu *HostUpdate) AddNetstat(n ...*Netstat) *HostUpdate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hu.AddNetstatIDIDs(ids...)
+	return hu.AddNetstatIDs(ids...)
 }
 
-// AddDiskIDIDs adds the "disk_id" edge to the Disk entity by IDs.
-func (hu *HostUpdate) AddDiskIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.AddDiskIDIDs(ids...)
+// AddDiskIDs adds the "disk" edge to the Disk entity by IDs.
+func (hu *HostUpdate) AddDiskIDs(ids ...int) *HostUpdate {
+	hu.mutation.AddDiskIDs(ids...)
 	return hu
 }
 
-// AddDiskID adds the "disk_id" edges to the Disk entity.
-func (hu *HostUpdate) AddDiskID(d ...*Disk) *HostUpdate {
+// AddDisk adds the "disk" edges to the Disk entity.
+func (hu *HostUpdate) AddDisk(d ...*Disk) *HostUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
-	return hu.AddDiskIDIDs(ids...)
+	return hu.AddDiskIDs(ids...)
 }
 
 // Mutation returns the HostMutation object of the builder.
@@ -179,88 +179,88 @@ func (hu *HostUpdate) Mutation() *HostMutation {
 	return hu.mutation
 }
 
-// ClearCPUID clears all "cpu_id" edges to the Cpu entity.
-func (hu *HostUpdate) ClearCPUID() *HostUpdate {
-	hu.mutation.ClearCPUID()
+// ClearCPU clears all "cpu" edges to the Cpu entity.
+func (hu *HostUpdate) ClearCPU() *HostUpdate {
+	hu.mutation.ClearCPU()
 	return hu
 }
 
-// RemoveCPUIDIDs removes the "cpu_id" edge to Cpu entities by IDs.
-func (hu *HostUpdate) RemoveCPUIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.RemoveCPUIDIDs(ids...)
+// RemoveCPUIDs removes the "cpu" edge to Cpu entities by IDs.
+func (hu *HostUpdate) RemoveCPUIDs(ids ...int) *HostUpdate {
+	hu.mutation.RemoveCPUIDs(ids...)
 	return hu
 }
 
-// RemoveCPUID removes "cpu_id" edges to Cpu entities.
-func (hu *HostUpdate) RemoveCPUID(c ...*Cpu) *HostUpdate {
+// RemoveCPU removes "cpu" edges to Cpu entities.
+func (hu *HostUpdate) RemoveCPU(c ...*Cpu) *HostUpdate {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return hu.RemoveCPUIDIDs(ids...)
+	return hu.RemoveCPUIDs(ids...)
 }
 
-// ClearNetworkID clears all "network_id" edges to the Network entity.
-func (hu *HostUpdate) ClearNetworkID() *HostUpdate {
-	hu.mutation.ClearNetworkID()
+// ClearNetwork clears all "network" edges to the Network entity.
+func (hu *HostUpdate) ClearNetwork() *HostUpdate {
+	hu.mutation.ClearNetwork()
 	return hu
 }
 
-// RemoveNetworkIDIDs removes the "network_id" edge to Network entities by IDs.
-func (hu *HostUpdate) RemoveNetworkIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.RemoveNetworkIDIDs(ids...)
+// RemoveNetworkIDs removes the "network" edge to Network entities by IDs.
+func (hu *HostUpdate) RemoveNetworkIDs(ids ...int) *HostUpdate {
+	hu.mutation.RemoveNetworkIDs(ids...)
 	return hu
 }
 
-// RemoveNetworkID removes "network_id" edges to Network entities.
-func (hu *HostUpdate) RemoveNetworkID(n ...*Network) *HostUpdate {
+// RemoveNetwork removes "network" edges to Network entities.
+func (hu *HostUpdate) RemoveNetwork(n ...*Network) *HostUpdate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hu.RemoveNetworkIDIDs(ids...)
+	return hu.RemoveNetworkIDs(ids...)
 }
 
-// ClearNetstatID clears all "netstat_id" edges to the Netstat entity.
-func (hu *HostUpdate) ClearNetstatID() *HostUpdate {
-	hu.mutation.ClearNetstatID()
+// ClearNetstat clears all "netstat" edges to the Netstat entity.
+func (hu *HostUpdate) ClearNetstat() *HostUpdate {
+	hu.mutation.ClearNetstat()
 	return hu
 }
 
-// RemoveNetstatIDIDs removes the "netstat_id" edge to Netstat entities by IDs.
-func (hu *HostUpdate) RemoveNetstatIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.RemoveNetstatIDIDs(ids...)
+// RemoveNetstatIDs removes the "netstat" edge to Netstat entities by IDs.
+func (hu *HostUpdate) RemoveNetstatIDs(ids ...int) *HostUpdate {
+	hu.mutation.RemoveNetstatIDs(ids...)
 	return hu
 }
 
-// RemoveNetstatID removes "netstat_id" edges to Netstat entities.
-func (hu *HostUpdate) RemoveNetstatID(n ...*Netstat) *HostUpdate {
+// RemoveNetstat removes "netstat" edges to Netstat entities.
+func (hu *HostUpdate) RemoveNetstat(n ...*Netstat) *HostUpdate {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return hu.RemoveNetstatIDIDs(ids...)
+	return hu.RemoveNetstatIDs(ids...)
 }
 
-// ClearDiskID clears all "disk_id" edges to the Disk entity.
-func (hu *HostUpdate) ClearDiskID() *HostUpdate {
-	hu.mutation.ClearDiskID()
+// ClearDisk clears all "disk" edges to the Disk entity.
+func (hu *HostUpdate) ClearDisk() *HostUpdate {
+	hu.mutation.ClearDisk()
 	return hu
 }
 
-// RemoveDiskIDIDs removes the "disk_id" edge to Disk entities by IDs.
-func (hu *HostUpdate) RemoveDiskIDIDs(ids ...int) *HostUpdate {
-	hu.mutation.RemoveDiskIDIDs(ids...)
+// RemoveDiskIDs removes the "disk" edge to Disk entities by IDs.
+func (hu *HostUpdate) RemoveDiskIDs(ids ...int) *HostUpdate {
+	hu.mutation.RemoveDiskIDs(ids...)
 	return hu
 }
 
-// RemoveDiskID removes "disk_id" edges to Disk entities.
-func (hu *HostUpdate) RemoveDiskID(d ...*Disk) *HostUpdate {
+// RemoveDisk removes "disk" edges to Disk entities.
+func (hu *HostUpdate) RemoveDisk(d ...*Disk) *HostUpdate {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
-	return hu.RemoveDiskIDIDs(ids...)
+	return hu.RemoveDiskIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -412,12 +412,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: host.FieldUpdatedAt,
 		})
 	}
-	if hu.mutation.CPUIDCleared() {
+	if hu.mutation.CPUCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -428,12 +428,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.RemovedCPUIDIDs(); len(nodes) > 0 && !hu.mutation.CPUIDCleared() {
+	if nodes := hu.mutation.RemovedCPUIDs(); len(nodes) > 0 && !hu.mutation.CPUCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -447,12 +447,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.CPUIDIDs(); len(nodes) > 0 {
+	if nodes := hu.mutation.CPUIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -466,12 +466,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if hu.mutation.NetworkIDCleared() {
+	if hu.mutation.NetworkCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -482,12 +482,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.RemovedNetworkIDIDs(); len(nodes) > 0 && !hu.mutation.NetworkIDCleared() {
+	if nodes := hu.mutation.RemovedNetworkIDs(); len(nodes) > 0 && !hu.mutation.NetworkCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -501,12 +501,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.NetworkIDIDs(); len(nodes) > 0 {
+	if nodes := hu.mutation.NetworkIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -520,12 +520,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if hu.mutation.NetstatIDCleared() {
+	if hu.mutation.NetstatCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -536,12 +536,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.RemovedNetstatIDIDs(); len(nodes) > 0 && !hu.mutation.NetstatIDCleared() {
+	if nodes := hu.mutation.RemovedNetstatIDs(); len(nodes) > 0 && !hu.mutation.NetstatCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -555,12 +555,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.NetstatIDIDs(); len(nodes) > 0 {
+	if nodes := hu.mutation.NetstatIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -574,12 +574,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if hu.mutation.DiskIDCleared() {
+	if hu.mutation.DiskCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -590,12 +590,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.RemovedDiskIDIDs(); len(nodes) > 0 && !hu.mutation.DiskIDCleared() {
+	if nodes := hu.mutation.RemovedDiskIDs(); len(nodes) > 0 && !hu.mutation.DiskCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -609,12 +609,12 @@ func (hu *HostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := hu.mutation.DiskIDIDs(); len(nodes) > 0 {
+	if nodes := hu.mutation.DiskIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -729,64 +729,64 @@ func (huo *HostUpdateOne) SetNillableUpdatedAt(t *time.Time) *HostUpdateOne {
 	return huo
 }
 
-// AddCPUIDIDs adds the "cpu_id" edge to the Cpu entity by IDs.
-func (huo *HostUpdateOne) AddCPUIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.AddCPUIDIDs(ids...)
+// AddCPUIDs adds the "cpu" edge to the Cpu entity by IDs.
+func (huo *HostUpdateOne) AddCPUIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.AddCPUIDs(ids...)
 	return huo
 }
 
-// AddCPUID adds the "cpu_id" edges to the Cpu entity.
-func (huo *HostUpdateOne) AddCPUID(c ...*Cpu) *HostUpdateOne {
+// AddCPU adds the "cpu" edges to the Cpu entity.
+func (huo *HostUpdateOne) AddCPU(c ...*Cpu) *HostUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return huo.AddCPUIDIDs(ids...)
+	return huo.AddCPUIDs(ids...)
 }
 
-// AddNetworkIDIDs adds the "network_id" edge to the Network entity by IDs.
-func (huo *HostUpdateOne) AddNetworkIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.AddNetworkIDIDs(ids...)
+// AddNetworkIDs adds the "network" edge to the Network entity by IDs.
+func (huo *HostUpdateOne) AddNetworkIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.AddNetworkIDs(ids...)
 	return huo
 }
 
-// AddNetworkID adds the "network_id" edges to the Network entity.
-func (huo *HostUpdateOne) AddNetworkID(n ...*Network) *HostUpdateOne {
+// AddNetwork adds the "network" edges to the Network entity.
+func (huo *HostUpdateOne) AddNetwork(n ...*Network) *HostUpdateOne {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return huo.AddNetworkIDIDs(ids...)
+	return huo.AddNetworkIDs(ids...)
 }
 
-// AddNetstatIDIDs adds the "netstat_id" edge to the Netstat entity by IDs.
-func (huo *HostUpdateOne) AddNetstatIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.AddNetstatIDIDs(ids...)
+// AddNetstatIDs adds the "netstat" edge to the Netstat entity by IDs.
+func (huo *HostUpdateOne) AddNetstatIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.AddNetstatIDs(ids...)
 	return huo
 }
 
-// AddNetstatID adds the "netstat_id" edges to the Netstat entity.
-func (huo *HostUpdateOne) AddNetstatID(n ...*Netstat) *HostUpdateOne {
+// AddNetstat adds the "netstat" edges to the Netstat entity.
+func (huo *HostUpdateOne) AddNetstat(n ...*Netstat) *HostUpdateOne {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return huo.AddNetstatIDIDs(ids...)
+	return huo.AddNetstatIDs(ids...)
 }
 
-// AddDiskIDIDs adds the "disk_id" edge to the Disk entity by IDs.
-func (huo *HostUpdateOne) AddDiskIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.AddDiskIDIDs(ids...)
+// AddDiskIDs adds the "disk" edge to the Disk entity by IDs.
+func (huo *HostUpdateOne) AddDiskIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.AddDiskIDs(ids...)
 	return huo
 }
 
-// AddDiskID adds the "disk_id" edges to the Disk entity.
-func (huo *HostUpdateOne) AddDiskID(d ...*Disk) *HostUpdateOne {
+// AddDisk adds the "disk" edges to the Disk entity.
+func (huo *HostUpdateOne) AddDisk(d ...*Disk) *HostUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
-	return huo.AddDiskIDIDs(ids...)
+	return huo.AddDiskIDs(ids...)
 }
 
 // Mutation returns the HostMutation object of the builder.
@@ -794,88 +794,88 @@ func (huo *HostUpdateOne) Mutation() *HostMutation {
 	return huo.mutation
 }
 
-// ClearCPUID clears all "cpu_id" edges to the Cpu entity.
-func (huo *HostUpdateOne) ClearCPUID() *HostUpdateOne {
-	huo.mutation.ClearCPUID()
+// ClearCPU clears all "cpu" edges to the Cpu entity.
+func (huo *HostUpdateOne) ClearCPU() *HostUpdateOne {
+	huo.mutation.ClearCPU()
 	return huo
 }
 
-// RemoveCPUIDIDs removes the "cpu_id" edge to Cpu entities by IDs.
-func (huo *HostUpdateOne) RemoveCPUIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.RemoveCPUIDIDs(ids...)
+// RemoveCPUIDs removes the "cpu" edge to Cpu entities by IDs.
+func (huo *HostUpdateOne) RemoveCPUIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.RemoveCPUIDs(ids...)
 	return huo
 }
 
-// RemoveCPUID removes "cpu_id" edges to Cpu entities.
-func (huo *HostUpdateOne) RemoveCPUID(c ...*Cpu) *HostUpdateOne {
+// RemoveCPU removes "cpu" edges to Cpu entities.
+func (huo *HostUpdateOne) RemoveCPU(c ...*Cpu) *HostUpdateOne {
 	ids := make([]int, len(c))
 	for i := range c {
 		ids[i] = c[i].ID
 	}
-	return huo.RemoveCPUIDIDs(ids...)
+	return huo.RemoveCPUIDs(ids...)
 }
 
-// ClearNetworkID clears all "network_id" edges to the Network entity.
-func (huo *HostUpdateOne) ClearNetworkID() *HostUpdateOne {
-	huo.mutation.ClearNetworkID()
+// ClearNetwork clears all "network" edges to the Network entity.
+func (huo *HostUpdateOne) ClearNetwork() *HostUpdateOne {
+	huo.mutation.ClearNetwork()
 	return huo
 }
 
-// RemoveNetworkIDIDs removes the "network_id" edge to Network entities by IDs.
-func (huo *HostUpdateOne) RemoveNetworkIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.RemoveNetworkIDIDs(ids...)
+// RemoveNetworkIDs removes the "network" edge to Network entities by IDs.
+func (huo *HostUpdateOne) RemoveNetworkIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.RemoveNetworkIDs(ids...)
 	return huo
 }
 
-// RemoveNetworkID removes "network_id" edges to Network entities.
-func (huo *HostUpdateOne) RemoveNetworkID(n ...*Network) *HostUpdateOne {
+// RemoveNetwork removes "network" edges to Network entities.
+func (huo *HostUpdateOne) RemoveNetwork(n ...*Network) *HostUpdateOne {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return huo.RemoveNetworkIDIDs(ids...)
+	return huo.RemoveNetworkIDs(ids...)
 }
 
-// ClearNetstatID clears all "netstat_id" edges to the Netstat entity.
-func (huo *HostUpdateOne) ClearNetstatID() *HostUpdateOne {
-	huo.mutation.ClearNetstatID()
+// ClearNetstat clears all "netstat" edges to the Netstat entity.
+func (huo *HostUpdateOne) ClearNetstat() *HostUpdateOne {
+	huo.mutation.ClearNetstat()
 	return huo
 }
 
-// RemoveNetstatIDIDs removes the "netstat_id" edge to Netstat entities by IDs.
-func (huo *HostUpdateOne) RemoveNetstatIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.RemoveNetstatIDIDs(ids...)
+// RemoveNetstatIDs removes the "netstat" edge to Netstat entities by IDs.
+func (huo *HostUpdateOne) RemoveNetstatIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.RemoveNetstatIDs(ids...)
 	return huo
 }
 
-// RemoveNetstatID removes "netstat_id" edges to Netstat entities.
-func (huo *HostUpdateOne) RemoveNetstatID(n ...*Netstat) *HostUpdateOne {
+// RemoveNetstat removes "netstat" edges to Netstat entities.
+func (huo *HostUpdateOne) RemoveNetstat(n ...*Netstat) *HostUpdateOne {
 	ids := make([]int, len(n))
 	for i := range n {
 		ids[i] = n[i].ID
 	}
-	return huo.RemoveNetstatIDIDs(ids...)
+	return huo.RemoveNetstatIDs(ids...)
 }
 
-// ClearDiskID clears all "disk_id" edges to the Disk entity.
-func (huo *HostUpdateOne) ClearDiskID() *HostUpdateOne {
-	huo.mutation.ClearDiskID()
+// ClearDisk clears all "disk" edges to the Disk entity.
+func (huo *HostUpdateOne) ClearDisk() *HostUpdateOne {
+	huo.mutation.ClearDisk()
 	return huo
 }
 
-// RemoveDiskIDIDs removes the "disk_id" edge to Disk entities by IDs.
-func (huo *HostUpdateOne) RemoveDiskIDIDs(ids ...int) *HostUpdateOne {
-	huo.mutation.RemoveDiskIDIDs(ids...)
+// RemoveDiskIDs removes the "disk" edge to Disk entities by IDs.
+func (huo *HostUpdateOne) RemoveDiskIDs(ids ...int) *HostUpdateOne {
+	huo.mutation.RemoveDiskIDs(ids...)
 	return huo
 }
 
-// RemoveDiskID removes "disk_id" edges to Disk entities.
-func (huo *HostUpdateOne) RemoveDiskID(d ...*Disk) *HostUpdateOne {
+// RemoveDisk removes "disk" edges to Disk entities.
+func (huo *HostUpdateOne) RemoveDisk(d ...*Disk) *HostUpdateOne {
 	ids := make([]int, len(d))
 	for i := range d {
 		ids[i] = d[i].ID
 	}
-	return huo.RemoveDiskIDIDs(ids...)
+	return huo.RemoveDiskIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -1051,12 +1051,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 			Column: host.FieldUpdatedAt,
 		})
 	}
-	if huo.mutation.CPUIDCleared() {
+	if huo.mutation.CPUCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1067,12 +1067,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.RemovedCPUIDIDs(); len(nodes) > 0 && !huo.mutation.CPUIDCleared() {
+	if nodes := huo.mutation.RemovedCPUIDs(); len(nodes) > 0 && !huo.mutation.CPUCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1086,12 +1086,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.CPUIDIDs(); len(nodes) > 0 {
+	if nodes := huo.mutation.CPUIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.CPUIDTable,
-			Columns: []string{host.CPUIDColumn},
+			Table:   host.CPUTable,
+			Columns: []string{host.CPUColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1105,12 +1105,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if huo.mutation.NetworkIDCleared() {
+	if huo.mutation.NetworkCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1121,12 +1121,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.RemovedNetworkIDIDs(); len(nodes) > 0 && !huo.mutation.NetworkIDCleared() {
+	if nodes := huo.mutation.RemovedNetworkIDs(); len(nodes) > 0 && !huo.mutation.NetworkCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1140,12 +1140,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.NetworkIDIDs(); len(nodes) > 0 {
+	if nodes := huo.mutation.NetworkIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetworkIDTable,
-			Columns: []string{host.NetworkIDColumn},
+			Table:   host.NetworkTable,
+			Columns: []string{host.NetworkColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1159,12 +1159,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if huo.mutation.NetstatIDCleared() {
+	if huo.mutation.NetstatCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1175,12 +1175,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.RemovedNetstatIDIDs(); len(nodes) > 0 && !huo.mutation.NetstatIDCleared() {
+	if nodes := huo.mutation.RemovedNetstatIDs(); len(nodes) > 0 && !huo.mutation.NetstatCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1194,12 +1194,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.NetstatIDIDs(); len(nodes) > 0 {
+	if nodes := huo.mutation.NetstatIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.NetstatIDTable,
-			Columns: []string{host.NetstatIDColumn},
+			Table:   host.NetstatTable,
+			Columns: []string{host.NetstatColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1213,12 +1213,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if huo.mutation.DiskIDCleared() {
+	if huo.mutation.DiskCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1229,12 +1229,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.RemovedDiskIDIDs(); len(nodes) > 0 && !huo.mutation.DiskIDCleared() {
+	if nodes := huo.mutation.RemovedDiskIDs(); len(nodes) > 0 && !huo.mutation.DiskCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1248,12 +1248,12 @@ func (huo *HostUpdateOne) sqlSave(ctx context.Context) (_node *Host, err error) 
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := huo.mutation.DiskIDIDs(); len(nodes) > 0 {
+	if nodes := huo.mutation.DiskIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
 			Inverse: false,
-			Table:   host.DiskIDTable,
-			Columns: []string{host.DiskIDColumn},
+			Table:   host.DiskTable,
+			Columns: []string{host.DiskColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

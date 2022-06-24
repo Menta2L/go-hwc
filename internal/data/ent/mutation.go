@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/cpu"
 	"github.com/menta2l/go-hwc/internal/data/ent/disk"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
@@ -42,6 +41,8 @@ type CPUMutation struct {
 	op             Op
 	typ            string
 	id             *int
+	_CPU           *int
+	add_CPU        *int
 	vendor_id      *string
 	family         *string
 	model          *string
@@ -152,6 +153,62 @@ func (m *CPUMutation) IDs(ctx context.Context) ([]int, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
+}
+
+// SetCPU sets the "CPU" field.
+func (m *CPUMutation) SetCPU(i int) {
+	m._CPU = &i
+	m.add_CPU = nil
+}
+
+// CPU returns the value of the "CPU" field in the mutation.
+func (m *CPUMutation) CPU() (r int, exists bool) {
+	v := m._CPU
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCPU returns the old "CPU" field's value of the Cpu entity.
+// If the Cpu object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CPUMutation) OldCPU(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCPU is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCPU requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCPU: %w", err)
+	}
+	return oldValue.CPU, nil
+}
+
+// AddCPU adds i to the "CPU" field.
+func (m *CPUMutation) AddCPU(i int) {
+	if m.add_CPU != nil {
+		*m.add_CPU += i
+	} else {
+		m.add_CPU = &i
+	}
+}
+
+// AddedCPU returns the value that was added to the "CPU" field in this mutation.
+func (m *CPUMutation) AddedCPU() (r int, exists bool) {
+	v := m.add_CPU
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCPU resets all changes to the "CPU" field.
+func (m *CPUMutation) ResetCPU() {
+	m._CPU = nil
+	m.add_CPU = nil
 }
 
 // SetVendorID sets the "vendor_id" field.
@@ -428,7 +485,10 @@ func (m *CPUMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CPUMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
+	if m._CPU != nil {
+		fields = append(fields, cpu.FieldCPU)
+	}
 	if m.vendor_id != nil {
 		fields = append(fields, cpu.FieldVendorID)
 	}
@@ -455,6 +515,8 @@ func (m *CPUMutation) Fields() []string {
 // schema.
 func (m *CPUMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case cpu.FieldCPU:
+		return m.CPU()
 	case cpu.FieldVendorID:
 		return m.VendorID()
 	case cpu.FieldFamily:
@@ -476,6 +538,8 @@ func (m *CPUMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *CPUMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case cpu.FieldCPU:
+		return m.OldCPU(ctx)
 	case cpu.FieldVendorID:
 		return m.OldVendorID(ctx)
 	case cpu.FieldFamily:
@@ -497,6 +561,13 @@ func (m *CPUMutation) OldField(ctx context.Context, name string) (ent.Value, err
 // type.
 func (m *CPUMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case cpu.FieldCPU:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCPU(v)
+		return nil
 	case cpu.FieldVendorID:
 		v, ok := value.(string)
 		if !ok {
@@ -546,13 +617,21 @@ func (m *CPUMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *CPUMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.add_CPU != nil {
+		fields = append(fields, cpu.FieldCPU)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *CPUMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case cpu.FieldCPU:
+		return m.AddedCPU()
+	}
 	return nil, false
 }
 
@@ -561,6 +640,13 @@ func (m *CPUMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *CPUMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case cpu.FieldCPU:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCPU(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Cpu numeric field %s", name)
 }
@@ -588,6 +674,9 @@ func (m *CPUMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *CPUMutation) ResetField(name string) error {
 	switch name {
+	case cpu.FieldCPU:
+		m.ResetCPU()
+		return nil
 	case cpu.FieldVendorID:
 		m.ResetVendorID()
 		return nil
@@ -693,9 +782,9 @@ type DiskMutation struct {
 	typ            string
 	id             *int
 	device         *string
-	mount          *string
-	fs_type        *string
-	opts           **pgtype.TextArray
+	_Mountpoint    *string
+	_Fstype        *string
+	opts           *[]string
 	created_at     *time.Time
 	updated_at     *time.Time
 	clearedFields  map[string]struct{}
@@ -840,85 +929,85 @@ func (m *DiskMutation) ResetDevice() {
 	m.device = nil
 }
 
-// SetMount sets the "mount" field.
-func (m *DiskMutation) SetMount(s string) {
-	m.mount = &s
+// SetMountpoint sets the "Mountpoint" field.
+func (m *DiskMutation) SetMountpoint(s string) {
+	m._Mountpoint = &s
 }
 
-// Mount returns the value of the "mount" field in the mutation.
-func (m *DiskMutation) Mount() (r string, exists bool) {
-	v := m.mount
+// Mountpoint returns the value of the "Mountpoint" field in the mutation.
+func (m *DiskMutation) Mountpoint() (r string, exists bool) {
+	v := m._Mountpoint
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMount returns the old "mount" field's value of the Disk entity.
+// OldMountpoint returns the old "Mountpoint" field's value of the Disk entity.
 // If the Disk object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DiskMutation) OldMount(ctx context.Context) (v string, err error) {
+func (m *DiskMutation) OldMountpoint(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMount is only allowed on UpdateOne operations")
+		return v, errors.New("OldMountpoint is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMount requires an ID field in the mutation")
+		return v, errors.New("OldMountpoint requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMount: %w", err)
+		return v, fmt.Errorf("querying old value for OldMountpoint: %w", err)
 	}
-	return oldValue.Mount, nil
+	return oldValue.Mountpoint, nil
 }
 
-// ResetMount resets all changes to the "mount" field.
-func (m *DiskMutation) ResetMount() {
-	m.mount = nil
+// ResetMountpoint resets all changes to the "Mountpoint" field.
+func (m *DiskMutation) ResetMountpoint() {
+	m._Mountpoint = nil
 }
 
-// SetFsType sets the "fs_type" field.
-func (m *DiskMutation) SetFsType(s string) {
-	m.fs_type = &s
+// SetFstype sets the "Fstype" field.
+func (m *DiskMutation) SetFstype(s string) {
+	m._Fstype = &s
 }
 
-// FsType returns the value of the "fs_type" field in the mutation.
-func (m *DiskMutation) FsType() (r string, exists bool) {
-	v := m.fs_type
+// Fstype returns the value of the "Fstype" field in the mutation.
+func (m *DiskMutation) Fstype() (r string, exists bool) {
+	v := m._Fstype
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFsType returns the old "fs_type" field's value of the Disk entity.
+// OldFstype returns the old "Fstype" field's value of the Disk entity.
 // If the Disk object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DiskMutation) OldFsType(ctx context.Context) (v string, err error) {
+func (m *DiskMutation) OldFstype(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFsType is only allowed on UpdateOne operations")
+		return v, errors.New("OldFstype is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFsType requires an ID field in the mutation")
+		return v, errors.New("OldFstype requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFsType: %w", err)
+		return v, fmt.Errorf("querying old value for OldFstype: %w", err)
 	}
-	return oldValue.FsType, nil
+	return oldValue.Fstype, nil
 }
 
-// ResetFsType resets all changes to the "fs_type" field.
-func (m *DiskMutation) ResetFsType() {
-	m.fs_type = nil
+// ResetFstype resets all changes to the "Fstype" field.
+func (m *DiskMutation) ResetFstype() {
+	m._Fstype = nil
 }
 
 // SetOpts sets the "opts" field.
-func (m *DiskMutation) SetOpts(pa *pgtype.TextArray) {
-	m.opts = &pa
+func (m *DiskMutation) SetOpts(s []string) {
+	m.opts = &s
 }
 
 // Opts returns the value of the "opts" field in the mutation.
-func (m *DiskMutation) Opts() (r *pgtype.TextArray, exists bool) {
+func (m *DiskMutation) Opts() (r []string, exists bool) {
 	v := m.opts
 	if v == nil {
 		return
@@ -929,7 +1018,7 @@ func (m *DiskMutation) Opts() (r *pgtype.TextArray, exists bool) {
 // OldOpts returns the old "opts" field's value of the Disk entity.
 // If the Disk object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DiskMutation) OldOpts(ctx context.Context) (v *pgtype.TextArray, err error) {
+func (m *DiskMutation) OldOpts(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldOpts is only allowed on UpdateOne operations")
 	}
@@ -943,9 +1032,22 @@ func (m *DiskMutation) OldOpts(ctx context.Context) (v *pgtype.TextArray, err er
 	return oldValue.Opts, nil
 }
 
+// ClearOpts clears the value of the "opts" field.
+func (m *DiskMutation) ClearOpts() {
+	m.opts = nil
+	m.clearedFields[disk.FieldOpts] = struct{}{}
+}
+
+// OptsCleared returns if the "opts" field was cleared in this mutation.
+func (m *DiskMutation) OptsCleared() bool {
+	_, ok := m.clearedFields[disk.FieldOpts]
+	return ok
+}
+
 // ResetOpts resets all changes to the "opts" field.
 func (m *DiskMutation) ResetOpts() {
 	m.opts = nil
+	delete(m.clearedFields, disk.FieldOpts)
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -1082,11 +1184,11 @@ func (m *DiskMutation) Fields() []string {
 	if m.device != nil {
 		fields = append(fields, disk.FieldDevice)
 	}
-	if m.mount != nil {
-		fields = append(fields, disk.FieldMount)
+	if m._Mountpoint != nil {
+		fields = append(fields, disk.FieldMountpoint)
 	}
-	if m.fs_type != nil {
-		fields = append(fields, disk.FieldFsType)
+	if m._Fstype != nil {
+		fields = append(fields, disk.FieldFstype)
 	}
 	if m.opts != nil {
 		fields = append(fields, disk.FieldOpts)
@@ -1107,10 +1209,10 @@ func (m *DiskMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case disk.FieldDevice:
 		return m.Device()
-	case disk.FieldMount:
-		return m.Mount()
-	case disk.FieldFsType:
-		return m.FsType()
+	case disk.FieldMountpoint:
+		return m.Mountpoint()
+	case disk.FieldFstype:
+		return m.Fstype()
 	case disk.FieldOpts:
 		return m.Opts()
 	case disk.FieldCreatedAt:
@@ -1128,10 +1230,10 @@ func (m *DiskMutation) OldField(ctx context.Context, name string) (ent.Value, er
 	switch name {
 	case disk.FieldDevice:
 		return m.OldDevice(ctx)
-	case disk.FieldMount:
-		return m.OldMount(ctx)
-	case disk.FieldFsType:
-		return m.OldFsType(ctx)
+	case disk.FieldMountpoint:
+		return m.OldMountpoint(ctx)
+	case disk.FieldFstype:
+		return m.OldFstype(ctx)
 	case disk.FieldOpts:
 		return m.OldOpts(ctx)
 	case disk.FieldCreatedAt:
@@ -1154,22 +1256,22 @@ func (m *DiskMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDevice(v)
 		return nil
-	case disk.FieldMount:
+	case disk.FieldMountpoint:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMount(v)
+		m.SetMountpoint(v)
 		return nil
-	case disk.FieldFsType:
+	case disk.FieldFstype:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFsType(v)
+		m.SetFstype(v)
 		return nil
 	case disk.FieldOpts:
-		v, ok := value.(*pgtype.TextArray)
+		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1218,7 +1320,11 @@ func (m *DiskMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *DiskMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(disk.FieldOpts) {
+		fields = append(fields, disk.FieldOpts)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1231,6 +1337,11 @@ func (m *DiskMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *DiskMutation) ClearField(name string) error {
+	switch name {
+	case disk.FieldOpts:
+		m.ClearOpts()
+		return nil
+	}
 	return fmt.Errorf("unknown Disk nullable field %s", name)
 }
 
@@ -1241,11 +1352,11 @@ func (m *DiskMutation) ResetField(name string) error {
 	case disk.FieldDevice:
 		m.ResetDevice()
 		return nil
-	case disk.FieldMount:
-		m.ResetMount()
+	case disk.FieldMountpoint:
+		m.ResetMountpoint()
 		return nil
-	case disk.FieldFsType:
-		m.ResetFsType()
+	case disk.FieldFstype:
+		m.ResetFstype()
 		return nil
 	case disk.FieldOpts:
 		m.ResetOpts()
@@ -1354,18 +1465,18 @@ type HostMutation struct {
 	created_at            *time.Time
 	updated_at            *time.Time
 	clearedFields         map[string]struct{}
-	cpu_id                map[int]struct{}
-	removedcpu_id         map[int]struct{}
-	clearedcpu_id         bool
-	network_id            map[int]struct{}
-	removednetwork_id     map[int]struct{}
-	clearednetwork_id     bool
-	netstat_id            map[int]struct{}
-	removednetstat_id     map[int]struct{}
-	clearednetstat_id     bool
-	disk_id               map[int]struct{}
-	removeddisk_id        map[int]struct{}
-	cleareddisk_id        bool
+	cpu                   map[int]struct{}
+	removedcpu            map[int]struct{}
+	clearedcpu            bool
+	network               map[int]struct{}
+	removednetwork        map[int]struct{}
+	clearednetwork        bool
+	netstat               map[int]struct{}
+	removednetstat        map[int]struct{}
+	clearednetstat        bool
+	disk                  map[int]struct{}
+	removeddisk           map[int]struct{}
+	cleareddisk           bool
 	done                  bool
 	oldValue              func(context.Context) (*Host, error)
 	predicates            []predicate.Host
@@ -1871,220 +1982,220 @@ func (m *HostMutation) ResetUpdatedAt() {
 	m.updated_at = nil
 }
 
-// AddCPUIDIDs adds the "cpu_id" edge to the Cpu entity by ids.
-func (m *HostMutation) AddCPUIDIDs(ids ...int) {
-	if m.cpu_id == nil {
-		m.cpu_id = make(map[int]struct{})
+// AddCPUIDs adds the "cpu" edge to the Cpu entity by ids.
+func (m *HostMutation) AddCPUIDs(ids ...int) {
+	if m.cpu == nil {
+		m.cpu = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.cpu_id[ids[i]] = struct{}{}
+		m.cpu[ids[i]] = struct{}{}
 	}
 }
 
-// ClearCPUID clears the "cpu_id" edge to the Cpu entity.
-func (m *HostMutation) ClearCPUID() {
-	m.clearedcpu_id = true
+// ClearCPU clears the "cpu" edge to the Cpu entity.
+func (m *HostMutation) ClearCPU() {
+	m.clearedcpu = true
 }
 
-// CPUIDCleared reports if the "cpu_id" edge to the Cpu entity was cleared.
-func (m *HostMutation) CPUIDCleared() bool {
-	return m.clearedcpu_id
+// CPUCleared reports if the "cpu" edge to the Cpu entity was cleared.
+func (m *HostMutation) CPUCleared() bool {
+	return m.clearedcpu
 }
 
-// RemoveCPUIDIDs removes the "cpu_id" edge to the Cpu entity by IDs.
-func (m *HostMutation) RemoveCPUIDIDs(ids ...int) {
-	if m.removedcpu_id == nil {
-		m.removedcpu_id = make(map[int]struct{})
+// RemoveCPUIDs removes the "cpu" edge to the Cpu entity by IDs.
+func (m *HostMutation) RemoveCPUIDs(ids ...int) {
+	if m.removedcpu == nil {
+		m.removedcpu = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.cpu_id, ids[i])
-		m.removedcpu_id[ids[i]] = struct{}{}
+		delete(m.cpu, ids[i])
+		m.removedcpu[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedCPUID returns the removed IDs of the "cpu_id" edge to the Cpu entity.
-func (m *HostMutation) RemovedCPUIDIDs() (ids []int) {
-	for id := range m.removedcpu_id {
+// RemovedCPU returns the removed IDs of the "cpu" edge to the Cpu entity.
+func (m *HostMutation) RemovedCPUIDs() (ids []int) {
+	for id := range m.removedcpu {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// CPUIDIDs returns the "cpu_id" edge IDs in the mutation.
-func (m *HostMutation) CPUIDIDs() (ids []int) {
-	for id := range m.cpu_id {
+// CPUIDs returns the "cpu" edge IDs in the mutation.
+func (m *HostMutation) CPUIDs() (ids []int) {
+	for id := range m.cpu {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetCPUID resets all changes to the "cpu_id" edge.
-func (m *HostMutation) ResetCPUID() {
-	m.cpu_id = nil
-	m.clearedcpu_id = false
-	m.removedcpu_id = nil
+// ResetCPU resets all changes to the "cpu" edge.
+func (m *HostMutation) ResetCPU() {
+	m.cpu = nil
+	m.clearedcpu = false
+	m.removedcpu = nil
 }
 
-// AddNetworkIDIDs adds the "network_id" edge to the Network entity by ids.
-func (m *HostMutation) AddNetworkIDIDs(ids ...int) {
-	if m.network_id == nil {
-		m.network_id = make(map[int]struct{})
+// AddNetworkIDs adds the "network" edge to the Network entity by ids.
+func (m *HostMutation) AddNetworkIDs(ids ...int) {
+	if m.network == nil {
+		m.network = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.network_id[ids[i]] = struct{}{}
+		m.network[ids[i]] = struct{}{}
 	}
 }
 
-// ClearNetworkID clears the "network_id" edge to the Network entity.
-func (m *HostMutation) ClearNetworkID() {
-	m.clearednetwork_id = true
+// ClearNetwork clears the "network" edge to the Network entity.
+func (m *HostMutation) ClearNetwork() {
+	m.clearednetwork = true
 }
 
-// NetworkIDCleared reports if the "network_id" edge to the Network entity was cleared.
-func (m *HostMutation) NetworkIDCleared() bool {
-	return m.clearednetwork_id
+// NetworkCleared reports if the "network" edge to the Network entity was cleared.
+func (m *HostMutation) NetworkCleared() bool {
+	return m.clearednetwork
 }
 
-// RemoveNetworkIDIDs removes the "network_id" edge to the Network entity by IDs.
-func (m *HostMutation) RemoveNetworkIDIDs(ids ...int) {
-	if m.removednetwork_id == nil {
-		m.removednetwork_id = make(map[int]struct{})
-	}
-	for i := range ids {
-		delete(m.network_id, ids[i])
-		m.removednetwork_id[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedNetworkID returns the removed IDs of the "network_id" edge to the Network entity.
-func (m *HostMutation) RemovedNetworkIDIDs() (ids []int) {
-	for id := range m.removednetwork_id {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// NetworkIDIDs returns the "network_id" edge IDs in the mutation.
-func (m *HostMutation) NetworkIDIDs() (ids []int) {
-	for id := range m.network_id {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetNetworkID resets all changes to the "network_id" edge.
-func (m *HostMutation) ResetNetworkID() {
-	m.network_id = nil
-	m.clearednetwork_id = false
-	m.removednetwork_id = nil
-}
-
-// AddNetstatIDIDs adds the "netstat_id" edge to the Netstat entity by ids.
-func (m *HostMutation) AddNetstatIDIDs(ids ...int) {
-	if m.netstat_id == nil {
-		m.netstat_id = make(map[int]struct{})
+// RemoveNetworkIDs removes the "network" edge to the Network entity by IDs.
+func (m *HostMutation) RemoveNetworkIDs(ids ...int) {
+	if m.removednetwork == nil {
+		m.removednetwork = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.netstat_id[ids[i]] = struct{}{}
+		delete(m.network, ids[i])
+		m.removednetwork[ids[i]] = struct{}{}
 	}
 }
 
-// ClearNetstatID clears the "netstat_id" edge to the Netstat entity.
-func (m *HostMutation) ClearNetstatID() {
-	m.clearednetstat_id = true
+// RemovedNetwork returns the removed IDs of the "network" edge to the Network entity.
+func (m *HostMutation) RemovedNetworkIDs() (ids []int) {
+	for id := range m.removednetwork {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// NetstatIDCleared reports if the "netstat_id" edge to the Netstat entity was cleared.
-func (m *HostMutation) NetstatIDCleared() bool {
-	return m.clearednetstat_id
+// NetworkIDs returns the "network" edge IDs in the mutation.
+func (m *HostMutation) NetworkIDs() (ids []int) {
+	for id := range m.network {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// RemoveNetstatIDIDs removes the "netstat_id" edge to the Netstat entity by IDs.
-func (m *HostMutation) RemoveNetstatIDIDs(ids ...int) {
-	if m.removednetstat_id == nil {
-		m.removednetstat_id = make(map[int]struct{})
+// ResetNetwork resets all changes to the "network" edge.
+func (m *HostMutation) ResetNetwork() {
+	m.network = nil
+	m.clearednetwork = false
+	m.removednetwork = nil
+}
+
+// AddNetstatIDs adds the "netstat" edge to the Netstat entity by ids.
+func (m *HostMutation) AddNetstatIDs(ids ...int) {
+	if m.netstat == nil {
+		m.netstat = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.netstat_id, ids[i])
-		m.removednetstat_id[ids[i]] = struct{}{}
+		m.netstat[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedNetstatID returns the removed IDs of the "netstat_id" edge to the Netstat entity.
-func (m *HostMutation) RemovedNetstatIDIDs() (ids []int) {
-	for id := range m.removednetstat_id {
-		ids = append(ids, id)
-	}
-	return
+// ClearNetstat clears the "netstat" edge to the Netstat entity.
+func (m *HostMutation) ClearNetstat() {
+	m.clearednetstat = true
 }
 
-// NetstatIDIDs returns the "netstat_id" edge IDs in the mutation.
-func (m *HostMutation) NetstatIDIDs() (ids []int) {
-	for id := range m.netstat_id {
-		ids = append(ids, id)
-	}
-	return
+// NetstatCleared reports if the "netstat" edge to the Netstat entity was cleared.
+func (m *HostMutation) NetstatCleared() bool {
+	return m.clearednetstat
 }
 
-// ResetNetstatID resets all changes to the "netstat_id" edge.
-func (m *HostMutation) ResetNetstatID() {
-	m.netstat_id = nil
-	m.clearednetstat_id = false
-	m.removednetstat_id = nil
-}
-
-// AddDiskIDIDs adds the "disk_id" edge to the Disk entity by ids.
-func (m *HostMutation) AddDiskIDIDs(ids ...int) {
-	if m.disk_id == nil {
-		m.disk_id = make(map[int]struct{})
+// RemoveNetstatIDs removes the "netstat" edge to the Netstat entity by IDs.
+func (m *HostMutation) RemoveNetstatIDs(ids ...int) {
+	if m.removednetstat == nil {
+		m.removednetstat = make(map[int]struct{})
 	}
 	for i := range ids {
-		m.disk_id[ids[i]] = struct{}{}
+		delete(m.netstat, ids[i])
+		m.removednetstat[ids[i]] = struct{}{}
 	}
 }
 
-// ClearDiskID clears the "disk_id" edge to the Disk entity.
-func (m *HostMutation) ClearDiskID() {
-	m.cleareddisk_id = true
+// RemovedNetstat returns the removed IDs of the "netstat" edge to the Netstat entity.
+func (m *HostMutation) RemovedNetstatIDs() (ids []int) {
+	for id := range m.removednetstat {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// DiskIDCleared reports if the "disk_id" edge to the Disk entity was cleared.
-func (m *HostMutation) DiskIDCleared() bool {
-	return m.cleareddisk_id
+// NetstatIDs returns the "netstat" edge IDs in the mutation.
+func (m *HostMutation) NetstatIDs() (ids []int) {
+	for id := range m.netstat {
+		ids = append(ids, id)
+	}
+	return
 }
 
-// RemoveDiskIDIDs removes the "disk_id" edge to the Disk entity by IDs.
-func (m *HostMutation) RemoveDiskIDIDs(ids ...int) {
-	if m.removeddisk_id == nil {
-		m.removeddisk_id = make(map[int]struct{})
+// ResetNetstat resets all changes to the "netstat" edge.
+func (m *HostMutation) ResetNetstat() {
+	m.netstat = nil
+	m.clearednetstat = false
+	m.removednetstat = nil
+}
+
+// AddDiskIDs adds the "disk" edge to the Disk entity by ids.
+func (m *HostMutation) AddDiskIDs(ids ...int) {
+	if m.disk == nil {
+		m.disk = make(map[int]struct{})
 	}
 	for i := range ids {
-		delete(m.disk_id, ids[i])
-		m.removeddisk_id[ids[i]] = struct{}{}
+		m.disk[ids[i]] = struct{}{}
 	}
 }
 
-// RemovedDiskID returns the removed IDs of the "disk_id" edge to the Disk entity.
-func (m *HostMutation) RemovedDiskIDIDs() (ids []int) {
-	for id := range m.removeddisk_id {
+// ClearDisk clears the "disk" edge to the Disk entity.
+func (m *HostMutation) ClearDisk() {
+	m.cleareddisk = true
+}
+
+// DiskCleared reports if the "disk" edge to the Disk entity was cleared.
+func (m *HostMutation) DiskCleared() bool {
+	return m.cleareddisk
+}
+
+// RemoveDiskIDs removes the "disk" edge to the Disk entity by IDs.
+func (m *HostMutation) RemoveDiskIDs(ids ...int) {
+	if m.removeddisk == nil {
+		m.removeddisk = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.disk, ids[i])
+		m.removeddisk[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedDisk returns the removed IDs of the "disk" edge to the Disk entity.
+func (m *HostMutation) RemovedDiskIDs() (ids []int) {
+	for id := range m.removeddisk {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// DiskIDIDs returns the "disk_id" edge IDs in the mutation.
-func (m *HostMutation) DiskIDIDs() (ids []int) {
-	for id := range m.disk_id {
+// DiskIDs returns the "disk" edge IDs in the mutation.
+func (m *HostMutation) DiskIDs() (ids []int) {
+	for id := range m.disk {
 		ids = append(ids, id)
 	}
 	return
 }
 
-// ResetDiskID resets all changes to the "disk_id" edge.
-func (m *HostMutation) ResetDiskID() {
-	m.disk_id = nil
-	m.cleareddisk_id = false
-	m.removeddisk_id = nil
+// ResetDisk resets all changes to the "disk" edge.
+func (m *HostMutation) ResetDisk() {
+	m.disk = nil
+	m.cleareddisk = false
+	m.removeddisk = nil
 }
 
 // Where appends a list predicates to the HostMutation builder.
@@ -2376,17 +2487,17 @@ func (m *HostMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *HostMutation) AddedEdges() []string {
 	edges := make([]string, 0, 4)
-	if m.cpu_id != nil {
-		edges = append(edges, host.EdgeCPUID)
+	if m.cpu != nil {
+		edges = append(edges, host.EdgeCPU)
 	}
-	if m.network_id != nil {
-		edges = append(edges, host.EdgeNetworkID)
+	if m.network != nil {
+		edges = append(edges, host.EdgeNetwork)
 	}
-	if m.netstat_id != nil {
-		edges = append(edges, host.EdgeNetstatID)
+	if m.netstat != nil {
+		edges = append(edges, host.EdgeNetstat)
 	}
-	if m.disk_id != nil {
-		edges = append(edges, host.EdgeDiskID)
+	if m.disk != nil {
+		edges = append(edges, host.EdgeDisk)
 	}
 	return edges
 }
@@ -2395,27 +2506,27 @@ func (m *HostMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *HostMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case host.EdgeCPUID:
-		ids := make([]ent.Value, 0, len(m.cpu_id))
-		for id := range m.cpu_id {
+	case host.EdgeCPU:
+		ids := make([]ent.Value, 0, len(m.cpu))
+		for id := range m.cpu {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeNetworkID:
-		ids := make([]ent.Value, 0, len(m.network_id))
-		for id := range m.network_id {
+	case host.EdgeNetwork:
+		ids := make([]ent.Value, 0, len(m.network))
+		for id := range m.network {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeNetstatID:
-		ids := make([]ent.Value, 0, len(m.netstat_id))
-		for id := range m.netstat_id {
+	case host.EdgeNetstat:
+		ids := make([]ent.Value, 0, len(m.netstat))
+		for id := range m.netstat {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeDiskID:
-		ids := make([]ent.Value, 0, len(m.disk_id))
-		for id := range m.disk_id {
+	case host.EdgeDisk:
+		ids := make([]ent.Value, 0, len(m.disk))
+		for id := range m.disk {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2426,17 +2537,17 @@ func (m *HostMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *HostMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 4)
-	if m.removedcpu_id != nil {
-		edges = append(edges, host.EdgeCPUID)
+	if m.removedcpu != nil {
+		edges = append(edges, host.EdgeCPU)
 	}
-	if m.removednetwork_id != nil {
-		edges = append(edges, host.EdgeNetworkID)
+	if m.removednetwork != nil {
+		edges = append(edges, host.EdgeNetwork)
 	}
-	if m.removednetstat_id != nil {
-		edges = append(edges, host.EdgeNetstatID)
+	if m.removednetstat != nil {
+		edges = append(edges, host.EdgeNetstat)
 	}
-	if m.removeddisk_id != nil {
-		edges = append(edges, host.EdgeDiskID)
+	if m.removeddisk != nil {
+		edges = append(edges, host.EdgeDisk)
 	}
 	return edges
 }
@@ -2445,27 +2556,27 @@ func (m *HostMutation) RemovedEdges() []string {
 // the given name in this mutation.
 func (m *HostMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case host.EdgeCPUID:
-		ids := make([]ent.Value, 0, len(m.removedcpu_id))
-		for id := range m.removedcpu_id {
+	case host.EdgeCPU:
+		ids := make([]ent.Value, 0, len(m.removedcpu))
+		for id := range m.removedcpu {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeNetworkID:
-		ids := make([]ent.Value, 0, len(m.removednetwork_id))
-		for id := range m.removednetwork_id {
+	case host.EdgeNetwork:
+		ids := make([]ent.Value, 0, len(m.removednetwork))
+		for id := range m.removednetwork {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeNetstatID:
-		ids := make([]ent.Value, 0, len(m.removednetstat_id))
-		for id := range m.removednetstat_id {
+	case host.EdgeNetstat:
+		ids := make([]ent.Value, 0, len(m.removednetstat))
+		for id := range m.removednetstat {
 			ids = append(ids, id)
 		}
 		return ids
-	case host.EdgeDiskID:
-		ids := make([]ent.Value, 0, len(m.removeddisk_id))
-		for id := range m.removeddisk_id {
+	case host.EdgeDisk:
+		ids := make([]ent.Value, 0, len(m.removeddisk))
+		for id := range m.removeddisk {
 			ids = append(ids, id)
 		}
 		return ids
@@ -2476,17 +2587,17 @@ func (m *HostMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *HostMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 4)
-	if m.clearedcpu_id {
-		edges = append(edges, host.EdgeCPUID)
+	if m.clearedcpu {
+		edges = append(edges, host.EdgeCPU)
 	}
-	if m.clearednetwork_id {
-		edges = append(edges, host.EdgeNetworkID)
+	if m.clearednetwork {
+		edges = append(edges, host.EdgeNetwork)
 	}
-	if m.clearednetstat_id {
-		edges = append(edges, host.EdgeNetstatID)
+	if m.clearednetstat {
+		edges = append(edges, host.EdgeNetstat)
 	}
-	if m.cleareddisk_id {
-		edges = append(edges, host.EdgeDiskID)
+	if m.cleareddisk {
+		edges = append(edges, host.EdgeDisk)
 	}
 	return edges
 }
@@ -2495,14 +2606,14 @@ func (m *HostMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *HostMutation) EdgeCleared(name string) bool {
 	switch name {
-	case host.EdgeCPUID:
-		return m.clearedcpu_id
-	case host.EdgeNetworkID:
-		return m.clearednetwork_id
-	case host.EdgeNetstatID:
-		return m.clearednetstat_id
-	case host.EdgeDiskID:
-		return m.cleareddisk_id
+	case host.EdgeCPU:
+		return m.clearedcpu
+	case host.EdgeNetwork:
+		return m.clearednetwork
+	case host.EdgeNetstat:
+		return m.clearednetstat
+	case host.EdgeDisk:
+		return m.cleareddisk
 	}
 	return false
 }
@@ -2519,17 +2630,17 @@ func (m *HostMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *HostMutation) ResetEdge(name string) error {
 	switch name {
-	case host.EdgeCPUID:
-		m.ResetCPUID()
+	case host.EdgeCPU:
+		m.ResetCPU()
 		return nil
-	case host.EdgeNetworkID:
-		m.ResetNetworkID()
+	case host.EdgeNetwork:
+		m.ResetNetwork()
 		return nil
-	case host.EdgeNetstatID:
-		m.ResetNetstatID()
+	case host.EdgeNetstat:
+		m.ResetNetstat()
 		return nil
-	case host.EdgeDiskID:
-		m.ResetDiskID()
+	case host.EdgeDisk:
+		m.ResetDisk()
 		return nil
 	}
 	return fmt.Errorf("unknown Host edge %s", name)
@@ -3227,14 +3338,14 @@ type NetworkMutation struct {
 	op             Op
 	typ            string
 	id             *int
-	idx            *int
-	addidx         *int
-	mtu            *int
-	addmtu         *int
+	_Index         *int
+	add_Index      *int
+	_MTU           *int
+	add_MTU        *int
 	name           *string
-	mac            *string
-	flags          **pgtype.TextArray
-	addrs          **pgtype.TextArray
+	_HardwareAddr  *string
+	_Flags         *[]string
+	addrs          *[]string
 	created_at     *time.Time
 	updated_at     *time.Time
 	clearedFields  map[string]struct{}
@@ -3343,116 +3454,116 @@ func (m *NetworkMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
-// SetIdx sets the "idx" field.
-func (m *NetworkMutation) SetIdx(i int) {
-	m.idx = &i
-	m.addidx = nil
+// SetIndex sets the "Index" field.
+func (m *NetworkMutation) SetIndex(i int) {
+	m._Index = &i
+	m.add_Index = nil
 }
 
-// Idx returns the value of the "idx" field in the mutation.
-func (m *NetworkMutation) Idx() (r int, exists bool) {
-	v := m.idx
+// Index returns the value of the "Index" field in the mutation.
+func (m *NetworkMutation) Index() (r int, exists bool) {
+	v := m._Index
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldIdx returns the old "idx" field's value of the Network entity.
+// OldIndex returns the old "Index" field's value of the Network entity.
 // If the Network object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *NetworkMutation) OldIdx(ctx context.Context) (v int, err error) {
+func (m *NetworkMutation) OldIndex(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIdx is only allowed on UpdateOne operations")
+		return v, errors.New("OldIndex is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIdx requires an ID field in the mutation")
+		return v, errors.New("OldIndex requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIdx: %w", err)
+		return v, fmt.Errorf("querying old value for OldIndex: %w", err)
 	}
-	return oldValue.Idx, nil
+	return oldValue.Index, nil
 }
 
-// AddIdx adds i to the "idx" field.
-func (m *NetworkMutation) AddIdx(i int) {
-	if m.addidx != nil {
-		*m.addidx += i
+// AddIndex adds i to the "Index" field.
+func (m *NetworkMutation) AddIndex(i int) {
+	if m.add_Index != nil {
+		*m.add_Index += i
 	} else {
-		m.addidx = &i
+		m.add_Index = &i
 	}
 }
 
-// AddedIdx returns the value that was added to the "idx" field in this mutation.
-func (m *NetworkMutation) AddedIdx() (r int, exists bool) {
-	v := m.addidx
+// AddedIndex returns the value that was added to the "Index" field in this mutation.
+func (m *NetworkMutation) AddedIndex() (r int, exists bool) {
+	v := m.add_Index
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetIdx resets all changes to the "idx" field.
-func (m *NetworkMutation) ResetIdx() {
-	m.idx = nil
-	m.addidx = nil
+// ResetIndex resets all changes to the "Index" field.
+func (m *NetworkMutation) ResetIndex() {
+	m._Index = nil
+	m.add_Index = nil
 }
 
-// SetMtu sets the "mtu" field.
-func (m *NetworkMutation) SetMtu(i int) {
-	m.mtu = &i
-	m.addmtu = nil
+// SetMTU sets the "MTU" field.
+func (m *NetworkMutation) SetMTU(i int) {
+	m._MTU = &i
+	m.add_MTU = nil
 }
 
-// Mtu returns the value of the "mtu" field in the mutation.
-func (m *NetworkMutation) Mtu() (r int, exists bool) {
-	v := m.mtu
+// MTU returns the value of the "MTU" field in the mutation.
+func (m *NetworkMutation) MTU() (r int, exists bool) {
+	v := m._MTU
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMtu returns the old "mtu" field's value of the Network entity.
+// OldMTU returns the old "MTU" field's value of the Network entity.
 // If the Network object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *NetworkMutation) OldMtu(ctx context.Context) (v int, err error) {
+func (m *NetworkMutation) OldMTU(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMtu is only allowed on UpdateOne operations")
+		return v, errors.New("OldMTU is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMtu requires an ID field in the mutation")
+		return v, errors.New("OldMTU requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMtu: %w", err)
+		return v, fmt.Errorf("querying old value for OldMTU: %w", err)
 	}
-	return oldValue.Mtu, nil
+	return oldValue.MTU, nil
 }
 
-// AddMtu adds i to the "mtu" field.
-func (m *NetworkMutation) AddMtu(i int) {
-	if m.addmtu != nil {
-		*m.addmtu += i
+// AddMTU adds i to the "MTU" field.
+func (m *NetworkMutation) AddMTU(i int) {
+	if m.add_MTU != nil {
+		*m.add_MTU += i
 	} else {
-		m.addmtu = &i
+		m.add_MTU = &i
 	}
 }
 
-// AddedMtu returns the value that was added to the "mtu" field in this mutation.
-func (m *NetworkMutation) AddedMtu() (r int, exists bool) {
-	v := m.addmtu
+// AddedMTU returns the value that was added to the "MTU" field in this mutation.
+func (m *NetworkMutation) AddedMTU() (r int, exists bool) {
+	v := m.add_MTU
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetMtu resets all changes to the "mtu" field.
-func (m *NetworkMutation) ResetMtu() {
-	m.mtu = nil
-	m.addmtu = nil
+// ResetMTU resets all changes to the "MTU" field.
+func (m *NetworkMutation) ResetMTU() {
+	m._MTU = nil
+	m.add_MTU = nil
 }
 
 // SetName sets the "name" field.
@@ -3491,60 +3602,60 @@ func (m *NetworkMutation) ResetName() {
 	m.name = nil
 }
 
-// SetMAC sets the "mac" field.
-func (m *NetworkMutation) SetMAC(s string) {
-	m.mac = &s
+// SetHardwareAddr sets the "HardwareAddr" field.
+func (m *NetworkMutation) SetHardwareAddr(s string) {
+	m._HardwareAddr = &s
 }
 
-// MAC returns the value of the "mac" field in the mutation.
-func (m *NetworkMutation) MAC() (r string, exists bool) {
-	v := m.mac
+// HardwareAddr returns the value of the "HardwareAddr" field in the mutation.
+func (m *NetworkMutation) HardwareAddr() (r string, exists bool) {
+	v := m._HardwareAddr
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldMAC returns the old "mac" field's value of the Network entity.
+// OldHardwareAddr returns the old "HardwareAddr" field's value of the Network entity.
 // If the Network object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *NetworkMutation) OldMAC(ctx context.Context) (v string, err error) {
+func (m *NetworkMutation) OldHardwareAddr(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldMAC is only allowed on UpdateOne operations")
+		return v, errors.New("OldHardwareAddr is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldMAC requires an ID field in the mutation")
+		return v, errors.New("OldHardwareAddr requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldMAC: %w", err)
+		return v, fmt.Errorf("querying old value for OldHardwareAddr: %w", err)
 	}
-	return oldValue.MAC, nil
+	return oldValue.HardwareAddr, nil
 }
 
-// ResetMAC resets all changes to the "mac" field.
-func (m *NetworkMutation) ResetMAC() {
-	m.mac = nil
+// ResetHardwareAddr resets all changes to the "HardwareAddr" field.
+func (m *NetworkMutation) ResetHardwareAddr() {
+	m._HardwareAddr = nil
 }
 
-// SetFlags sets the "flags" field.
-func (m *NetworkMutation) SetFlags(pa *pgtype.TextArray) {
-	m.flags = &pa
+// SetFlags sets the "Flags" field.
+func (m *NetworkMutation) SetFlags(s []string) {
+	m._Flags = &s
 }
 
-// Flags returns the value of the "flags" field in the mutation.
-func (m *NetworkMutation) Flags() (r *pgtype.TextArray, exists bool) {
-	v := m.flags
+// Flags returns the value of the "Flags" field in the mutation.
+func (m *NetworkMutation) Flags() (r []string, exists bool) {
+	v := m._Flags
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFlags returns the old "flags" field's value of the Network entity.
+// OldFlags returns the old "Flags" field's value of the Network entity.
 // If the Network object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *NetworkMutation) OldFlags(ctx context.Context) (v *pgtype.TextArray, err error) {
+func (m *NetworkMutation) OldFlags(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldFlags is only allowed on UpdateOne operations")
 	}
@@ -3558,31 +3669,31 @@ func (m *NetworkMutation) OldFlags(ctx context.Context) (v *pgtype.TextArray, er
 	return oldValue.Flags, nil
 }
 
-// ClearFlags clears the value of the "flags" field.
+// ClearFlags clears the value of the "Flags" field.
 func (m *NetworkMutation) ClearFlags() {
-	m.flags = nil
+	m._Flags = nil
 	m.clearedFields[network.FieldFlags] = struct{}{}
 }
 
-// FlagsCleared returns if the "flags" field was cleared in this mutation.
+// FlagsCleared returns if the "Flags" field was cleared in this mutation.
 func (m *NetworkMutation) FlagsCleared() bool {
 	_, ok := m.clearedFields[network.FieldFlags]
 	return ok
 }
 
-// ResetFlags resets all changes to the "flags" field.
+// ResetFlags resets all changes to the "Flags" field.
 func (m *NetworkMutation) ResetFlags() {
-	m.flags = nil
+	m._Flags = nil
 	delete(m.clearedFields, network.FieldFlags)
 }
 
 // SetAddrs sets the "addrs" field.
-func (m *NetworkMutation) SetAddrs(pa *pgtype.TextArray) {
-	m.addrs = &pa
+func (m *NetworkMutation) SetAddrs(s []string) {
+	m.addrs = &s
 }
 
 // Addrs returns the value of the "addrs" field in the mutation.
-func (m *NetworkMutation) Addrs() (r *pgtype.TextArray, exists bool) {
+func (m *NetworkMutation) Addrs() (r []string, exists bool) {
 	v := m.addrs
 	if v == nil {
 		return
@@ -3593,7 +3704,7 @@ func (m *NetworkMutation) Addrs() (r *pgtype.TextArray, exists bool) {
 // OldAddrs returns the old "addrs" field's value of the Network entity.
 // If the Network object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *NetworkMutation) OldAddrs(ctx context.Context) (v *pgtype.TextArray, err error) {
+func (m *NetworkMutation) OldAddrs(ctx context.Context) (v []string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAddrs is only allowed on UpdateOne operations")
 	}
@@ -3756,19 +3867,19 @@ func (m *NetworkMutation) Type() string {
 // AddedFields().
 func (m *NetworkMutation) Fields() []string {
 	fields := make([]string, 0, 8)
-	if m.idx != nil {
-		fields = append(fields, network.FieldIdx)
+	if m._Index != nil {
+		fields = append(fields, network.FieldIndex)
 	}
-	if m.mtu != nil {
-		fields = append(fields, network.FieldMtu)
+	if m._MTU != nil {
+		fields = append(fields, network.FieldMTU)
 	}
 	if m.name != nil {
 		fields = append(fields, network.FieldName)
 	}
-	if m.mac != nil {
-		fields = append(fields, network.FieldMAC)
+	if m._HardwareAddr != nil {
+		fields = append(fields, network.FieldHardwareAddr)
 	}
-	if m.flags != nil {
+	if m._Flags != nil {
 		fields = append(fields, network.FieldFlags)
 	}
 	if m.addrs != nil {
@@ -3788,14 +3899,14 @@ func (m *NetworkMutation) Fields() []string {
 // schema.
 func (m *NetworkMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case network.FieldIdx:
-		return m.Idx()
-	case network.FieldMtu:
-		return m.Mtu()
+	case network.FieldIndex:
+		return m.Index()
+	case network.FieldMTU:
+		return m.MTU()
 	case network.FieldName:
 		return m.Name()
-	case network.FieldMAC:
-		return m.MAC()
+	case network.FieldHardwareAddr:
+		return m.HardwareAddr()
 	case network.FieldFlags:
 		return m.Flags()
 	case network.FieldAddrs:
@@ -3813,14 +3924,14 @@ func (m *NetworkMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *NetworkMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case network.FieldIdx:
-		return m.OldIdx(ctx)
-	case network.FieldMtu:
-		return m.OldMtu(ctx)
+	case network.FieldIndex:
+		return m.OldIndex(ctx)
+	case network.FieldMTU:
+		return m.OldMTU(ctx)
 	case network.FieldName:
 		return m.OldName(ctx)
-	case network.FieldMAC:
-		return m.OldMAC(ctx)
+	case network.FieldHardwareAddr:
+		return m.OldHardwareAddr(ctx)
 	case network.FieldFlags:
 		return m.OldFlags(ctx)
 	case network.FieldAddrs:
@@ -3838,19 +3949,19 @@ func (m *NetworkMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type.
 func (m *NetworkMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case network.FieldIdx:
+	case network.FieldIndex:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetIdx(v)
+		m.SetIndex(v)
 		return nil
-	case network.FieldMtu:
+	case network.FieldMTU:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMtu(v)
+		m.SetMTU(v)
 		return nil
 	case network.FieldName:
 		v, ok := value.(string)
@@ -3859,22 +3970,22 @@ func (m *NetworkMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case network.FieldMAC:
+	case network.FieldHardwareAddr:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetMAC(v)
+		m.SetHardwareAddr(v)
 		return nil
 	case network.FieldFlags:
-		v, ok := value.(*pgtype.TextArray)
+		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetFlags(v)
 		return nil
 	case network.FieldAddrs:
-		v, ok := value.(*pgtype.TextArray)
+		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3902,11 +4013,11 @@ func (m *NetworkMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *NetworkMutation) AddedFields() []string {
 	var fields []string
-	if m.addidx != nil {
-		fields = append(fields, network.FieldIdx)
+	if m.add_Index != nil {
+		fields = append(fields, network.FieldIndex)
 	}
-	if m.addmtu != nil {
-		fields = append(fields, network.FieldMtu)
+	if m.add_MTU != nil {
+		fields = append(fields, network.FieldMTU)
 	}
 	return fields
 }
@@ -3916,10 +4027,10 @@ func (m *NetworkMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *NetworkMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case network.FieldIdx:
-		return m.AddedIdx()
-	case network.FieldMtu:
-		return m.AddedMtu()
+	case network.FieldIndex:
+		return m.AddedIndex()
+	case network.FieldMTU:
+		return m.AddedMTU()
 	}
 	return nil, false
 }
@@ -3929,19 +4040,19 @@ func (m *NetworkMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *NetworkMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case network.FieldIdx:
+	case network.FieldIndex:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddIdx(v)
+		m.AddIndex(v)
 		return nil
-	case network.FieldMtu:
+	case network.FieldMTU:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddMtu(v)
+		m.AddMTU(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Network numeric field %s", name)
@@ -3985,17 +4096,17 @@ func (m *NetworkMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *NetworkMutation) ResetField(name string) error {
 	switch name {
-	case network.FieldIdx:
-		m.ResetIdx()
+	case network.FieldIndex:
+		m.ResetIndex()
 		return nil
-	case network.FieldMtu:
-		m.ResetMtu()
+	case network.FieldMTU:
+		m.ResetMTU()
 		return nil
 	case network.FieldName:
 		m.ResetName()
 		return nil
-	case network.FieldMAC:
-		m.ResetMAC()
+	case network.FieldHardwareAddr:
+		m.ResetHardwareAddr()
 		return nil
 	case network.FieldFlags:
 		m.ResetFlags()

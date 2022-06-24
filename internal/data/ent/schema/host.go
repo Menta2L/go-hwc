@@ -38,17 +38,17 @@ func (Host) Fields() []ent.Field {
 // Edges of the Host.
 func (Host) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("cpu_id", Cpu.Type).
+		edge.To("cpu", Cpu.Type).
 			Annotations(entsql.Annotation{
 				OnDelete: entsql.Cascade,
 			}),
-		edge.To("network_id", Network.Type).Annotations(entsql.Annotation{
+		edge.To("network", Network.Type).Annotations(entsql.Annotation{
 			OnDelete: entsql.Cascade,
 		}),
-		edge.To("netstat_id", Netstat.Type).Annotations(entsql.Annotation{
+		edge.To("netstat", Netstat.Type).Annotations(entsql.Annotation{
 			OnDelete: entsql.Cascade,
 		}),
-		edge.To("disk_id", Disk.Type).Annotations(entsql.Annotation{
+		edge.To("disk", Disk.Type).Annotations(entsql.Annotation{
 			OnDelete: entsql.Cascade,
 		}),
 	}

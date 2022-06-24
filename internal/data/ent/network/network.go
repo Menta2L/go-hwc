@@ -11,14 +11,14 @@ const (
 	Label = "network"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldIdx holds the string denoting the idx field in the database.
-	FieldIdx = "idx"
-	// FieldMtu holds the string denoting the mtu field in the database.
-	FieldMtu = "mtu"
+	// FieldIndex holds the string denoting the index field in the database.
+	FieldIndex = "idx"
+	// FieldMTU holds the string denoting the mtu field in the database.
+	FieldMTU = "mtu"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldMAC holds the string denoting the mac field in the database.
-	FieldMAC = "mac"
+	// FieldHardwareAddr holds the string denoting the hardwareaddr field in the database.
+	FieldHardwareAddr = "mac"
 	// FieldFlags holds the string denoting the flags field in the database.
 	FieldFlags = "flags"
 	// FieldAddrs holds the string denoting the addrs field in the database.
@@ -37,16 +37,16 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "host" package.
 	HostIDInverseTable = "hosts"
 	// HostIDColumn is the table column denoting the host_id relation/edge.
-	HostIDColumn = "host_network_id"
+	HostIDColumn = "host_network"
 )
 
 // Columns holds all SQL columns for network fields.
 var Columns = []string{
 	FieldID,
-	FieldIdx,
-	FieldMtu,
+	FieldIndex,
+	FieldMTU,
 	FieldName,
-	FieldMAC,
+	FieldHardwareAddr,
 	FieldFlags,
 	FieldAddrs,
 	FieldCreatedAt,
@@ -56,7 +56,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "networks"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"host_network_id",
+	"host_network",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

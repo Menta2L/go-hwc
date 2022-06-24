@@ -11,7 +11,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 	"github.com/menta2l/go-hwc/internal/data/ent/network"
 	"github.com/menta2l/go-hwc/internal/data/ent/predicate"
@@ -30,29 +29,29 @@ func (nu *NetworkUpdate) Where(ps ...predicate.Network) *NetworkUpdate {
 	return nu
 }
 
-// SetIdx sets the "idx" field.
-func (nu *NetworkUpdate) SetIdx(i int) *NetworkUpdate {
-	nu.mutation.ResetIdx()
-	nu.mutation.SetIdx(i)
+// SetIndex sets the "Index" field.
+func (nu *NetworkUpdate) SetIndex(i int) *NetworkUpdate {
+	nu.mutation.ResetIndex()
+	nu.mutation.SetIndex(i)
 	return nu
 }
 
-// AddIdx adds i to the "idx" field.
-func (nu *NetworkUpdate) AddIdx(i int) *NetworkUpdate {
-	nu.mutation.AddIdx(i)
+// AddIndex adds i to the "Index" field.
+func (nu *NetworkUpdate) AddIndex(i int) *NetworkUpdate {
+	nu.mutation.AddIndex(i)
 	return nu
 }
 
-// SetMtu sets the "mtu" field.
-func (nu *NetworkUpdate) SetMtu(i int) *NetworkUpdate {
-	nu.mutation.ResetMtu()
-	nu.mutation.SetMtu(i)
+// SetMTU sets the "MTU" field.
+func (nu *NetworkUpdate) SetMTU(i int) *NetworkUpdate {
+	nu.mutation.ResetMTU()
+	nu.mutation.SetMTU(i)
 	return nu
 }
 
-// AddMtu adds i to the "mtu" field.
-func (nu *NetworkUpdate) AddMtu(i int) *NetworkUpdate {
-	nu.mutation.AddMtu(i)
+// AddMTU adds i to the "MTU" field.
+func (nu *NetworkUpdate) AddMTU(i int) *NetworkUpdate {
+	nu.mutation.AddMTU(i)
 	return nu
 }
 
@@ -62,27 +61,27 @@ func (nu *NetworkUpdate) SetName(s string) *NetworkUpdate {
 	return nu
 }
 
-// SetMAC sets the "mac" field.
-func (nu *NetworkUpdate) SetMAC(s string) *NetworkUpdate {
-	nu.mutation.SetMAC(s)
+// SetHardwareAddr sets the "HardwareAddr" field.
+func (nu *NetworkUpdate) SetHardwareAddr(s string) *NetworkUpdate {
+	nu.mutation.SetHardwareAddr(s)
 	return nu
 }
 
-// SetFlags sets the "flags" field.
-func (nu *NetworkUpdate) SetFlags(pa *pgtype.TextArray) *NetworkUpdate {
-	nu.mutation.SetFlags(pa)
+// SetFlags sets the "Flags" field.
+func (nu *NetworkUpdate) SetFlags(s []string) *NetworkUpdate {
+	nu.mutation.SetFlags(s)
 	return nu
 }
 
-// ClearFlags clears the value of the "flags" field.
+// ClearFlags clears the value of the "Flags" field.
 func (nu *NetworkUpdate) ClearFlags() *NetworkUpdate {
 	nu.mutation.ClearFlags()
 	return nu
 }
 
 // SetAddrs sets the "addrs" field.
-func (nu *NetworkUpdate) SetAddrs(pa *pgtype.TextArray) *NetworkUpdate {
-	nu.mutation.SetAddrs(pa)
+func (nu *NetworkUpdate) SetAddrs(s []string) *NetworkUpdate {
+	nu.mutation.SetAddrs(s)
 	return nu
 }
 
@@ -228,32 +227,32 @@ func (nu *NetworkUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := nu.mutation.Idx(); ok {
+	if value, ok := nu.mutation.Index(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldIdx,
+			Column: network.FieldIndex,
 		})
 	}
-	if value, ok := nu.mutation.AddedIdx(); ok {
+	if value, ok := nu.mutation.AddedIndex(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldIdx,
+			Column: network.FieldIndex,
 		})
 	}
-	if value, ok := nu.mutation.Mtu(); ok {
+	if value, ok := nu.mutation.MTU(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldMtu,
+			Column: network.FieldMTU,
 		})
 	}
-	if value, ok := nu.mutation.AddedMtu(); ok {
+	if value, ok := nu.mutation.AddedMTU(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldMtu,
+			Column: network.FieldMTU,
 		})
 	}
 	if value, ok := nu.mutation.Name(); ok {
@@ -263,36 +262,36 @@ func (nu *NetworkUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: network.FieldName,
 		})
 	}
-	if value, ok := nu.mutation.MAC(); ok {
+	if value, ok := nu.mutation.HardwareAddr(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: network.FieldMAC,
+			Column: network.FieldHardwareAddr,
 		})
 	}
 	if value, ok := nu.mutation.Flags(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldFlags,
 		})
 	}
 	if nu.mutation.FlagsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Column: network.FieldFlags,
 		})
 	}
 	if value, ok := nu.mutation.Addrs(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldAddrs,
 		})
 	}
 	if nu.mutation.AddrsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Column: network.FieldAddrs,
 		})
 	}
@@ -364,29 +363,29 @@ type NetworkUpdateOne struct {
 	mutation *NetworkMutation
 }
 
-// SetIdx sets the "idx" field.
-func (nuo *NetworkUpdateOne) SetIdx(i int) *NetworkUpdateOne {
-	nuo.mutation.ResetIdx()
-	nuo.mutation.SetIdx(i)
+// SetIndex sets the "Index" field.
+func (nuo *NetworkUpdateOne) SetIndex(i int) *NetworkUpdateOne {
+	nuo.mutation.ResetIndex()
+	nuo.mutation.SetIndex(i)
 	return nuo
 }
 
-// AddIdx adds i to the "idx" field.
-func (nuo *NetworkUpdateOne) AddIdx(i int) *NetworkUpdateOne {
-	nuo.mutation.AddIdx(i)
+// AddIndex adds i to the "Index" field.
+func (nuo *NetworkUpdateOne) AddIndex(i int) *NetworkUpdateOne {
+	nuo.mutation.AddIndex(i)
 	return nuo
 }
 
-// SetMtu sets the "mtu" field.
-func (nuo *NetworkUpdateOne) SetMtu(i int) *NetworkUpdateOne {
-	nuo.mutation.ResetMtu()
-	nuo.mutation.SetMtu(i)
+// SetMTU sets the "MTU" field.
+func (nuo *NetworkUpdateOne) SetMTU(i int) *NetworkUpdateOne {
+	nuo.mutation.ResetMTU()
+	nuo.mutation.SetMTU(i)
 	return nuo
 }
 
-// AddMtu adds i to the "mtu" field.
-func (nuo *NetworkUpdateOne) AddMtu(i int) *NetworkUpdateOne {
-	nuo.mutation.AddMtu(i)
+// AddMTU adds i to the "MTU" field.
+func (nuo *NetworkUpdateOne) AddMTU(i int) *NetworkUpdateOne {
+	nuo.mutation.AddMTU(i)
 	return nuo
 }
 
@@ -396,27 +395,27 @@ func (nuo *NetworkUpdateOne) SetName(s string) *NetworkUpdateOne {
 	return nuo
 }
 
-// SetMAC sets the "mac" field.
-func (nuo *NetworkUpdateOne) SetMAC(s string) *NetworkUpdateOne {
-	nuo.mutation.SetMAC(s)
+// SetHardwareAddr sets the "HardwareAddr" field.
+func (nuo *NetworkUpdateOne) SetHardwareAddr(s string) *NetworkUpdateOne {
+	nuo.mutation.SetHardwareAddr(s)
 	return nuo
 }
 
-// SetFlags sets the "flags" field.
-func (nuo *NetworkUpdateOne) SetFlags(pa *pgtype.TextArray) *NetworkUpdateOne {
-	nuo.mutation.SetFlags(pa)
+// SetFlags sets the "Flags" field.
+func (nuo *NetworkUpdateOne) SetFlags(s []string) *NetworkUpdateOne {
+	nuo.mutation.SetFlags(s)
 	return nuo
 }
 
-// ClearFlags clears the value of the "flags" field.
+// ClearFlags clears the value of the "Flags" field.
 func (nuo *NetworkUpdateOne) ClearFlags() *NetworkUpdateOne {
 	nuo.mutation.ClearFlags()
 	return nuo
 }
 
 // SetAddrs sets the "addrs" field.
-func (nuo *NetworkUpdateOne) SetAddrs(pa *pgtype.TextArray) *NetworkUpdateOne {
-	nuo.mutation.SetAddrs(pa)
+func (nuo *NetworkUpdateOne) SetAddrs(s []string) *NetworkUpdateOne {
+	nuo.mutation.SetAddrs(s)
 	return nuo
 }
 
@@ -586,32 +585,32 @@ func (nuo *NetworkUpdateOne) sqlSave(ctx context.Context) (_node *Network, err e
 			}
 		}
 	}
-	if value, ok := nuo.mutation.Idx(); ok {
+	if value, ok := nuo.mutation.Index(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldIdx,
+			Column: network.FieldIndex,
 		})
 	}
-	if value, ok := nuo.mutation.AddedIdx(); ok {
+	if value, ok := nuo.mutation.AddedIndex(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldIdx,
+			Column: network.FieldIndex,
 		})
 	}
-	if value, ok := nuo.mutation.Mtu(); ok {
+	if value, ok := nuo.mutation.MTU(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldMtu,
+			Column: network.FieldMTU,
 		})
 	}
-	if value, ok := nuo.mutation.AddedMtu(); ok {
+	if value, ok := nuo.mutation.AddedMTU(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldMtu,
+			Column: network.FieldMTU,
 		})
 	}
 	if value, ok := nuo.mutation.Name(); ok {
@@ -621,36 +620,36 @@ func (nuo *NetworkUpdateOne) sqlSave(ctx context.Context) (_node *Network, err e
 			Column: network.FieldName,
 		})
 	}
-	if value, ok := nuo.mutation.MAC(); ok {
+	if value, ok := nuo.mutation.HardwareAddr(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: network.FieldMAC,
+			Column: network.FieldHardwareAddr,
 		})
 	}
 	if value, ok := nuo.mutation.Flags(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldFlags,
 		})
 	}
 	if nuo.mutation.FlagsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Column: network.FieldFlags,
 		})
 	}
 	if value, ok := nuo.mutation.Addrs(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldAddrs,
 		})
 	}
 	if nuo.mutation.AddrsCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Column: network.FieldAddrs,
 		})
 	}

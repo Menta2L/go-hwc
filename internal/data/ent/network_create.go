@@ -10,7 +10,6 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 	"github.com/menta2l/go-hwc/internal/data/ent/network"
 )
@@ -22,15 +21,15 @@ type NetworkCreate struct {
 	hooks    []Hook
 }
 
-// SetIdx sets the "idx" field.
-func (nc *NetworkCreate) SetIdx(i int) *NetworkCreate {
-	nc.mutation.SetIdx(i)
+// SetIndex sets the "Index" field.
+func (nc *NetworkCreate) SetIndex(i int) *NetworkCreate {
+	nc.mutation.SetIndex(i)
 	return nc
 }
 
-// SetMtu sets the "mtu" field.
-func (nc *NetworkCreate) SetMtu(i int) *NetworkCreate {
-	nc.mutation.SetMtu(i)
+// SetMTU sets the "MTU" field.
+func (nc *NetworkCreate) SetMTU(i int) *NetworkCreate {
+	nc.mutation.SetMTU(i)
 	return nc
 }
 
@@ -40,21 +39,21 @@ func (nc *NetworkCreate) SetName(s string) *NetworkCreate {
 	return nc
 }
 
-// SetMAC sets the "mac" field.
-func (nc *NetworkCreate) SetMAC(s string) *NetworkCreate {
-	nc.mutation.SetMAC(s)
+// SetHardwareAddr sets the "HardwareAddr" field.
+func (nc *NetworkCreate) SetHardwareAddr(s string) *NetworkCreate {
+	nc.mutation.SetHardwareAddr(s)
 	return nc
 }
 
-// SetFlags sets the "flags" field.
-func (nc *NetworkCreate) SetFlags(pa *pgtype.TextArray) *NetworkCreate {
-	nc.mutation.SetFlags(pa)
+// SetFlags sets the "Flags" field.
+func (nc *NetworkCreate) SetFlags(s []string) *NetworkCreate {
+	nc.mutation.SetFlags(s)
 	return nc
 }
 
 // SetAddrs sets the "addrs" field.
-func (nc *NetworkCreate) SetAddrs(pa *pgtype.TextArray) *NetworkCreate {
-	nc.mutation.SetAddrs(pa)
+func (nc *NetworkCreate) SetAddrs(s []string) *NetworkCreate {
+	nc.mutation.SetAddrs(s)
 	return nc
 }
 
@@ -180,17 +179,17 @@ func (nc *NetworkCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (nc *NetworkCreate) check() error {
-	if _, ok := nc.mutation.Idx(); !ok {
-		return &ValidationError{Name: "idx", err: errors.New(`ent: missing required field "Network.idx"`)}
+	if _, ok := nc.mutation.Index(); !ok {
+		return &ValidationError{Name: "Index", err: errors.New(`ent: missing required field "Network.Index"`)}
 	}
-	if _, ok := nc.mutation.Mtu(); !ok {
-		return &ValidationError{Name: "mtu", err: errors.New(`ent: missing required field "Network.mtu"`)}
+	if _, ok := nc.mutation.MTU(); !ok {
+		return &ValidationError{Name: "MTU", err: errors.New(`ent: missing required field "Network.MTU"`)}
 	}
 	if _, ok := nc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Network.name"`)}
 	}
-	if _, ok := nc.mutation.MAC(); !ok {
-		return &ValidationError{Name: "mac", err: errors.New(`ent: missing required field "Network.mac"`)}
+	if _, ok := nc.mutation.HardwareAddr(); !ok {
+		return &ValidationError{Name: "HardwareAddr", err: errors.New(`ent: missing required field "Network.HardwareAddr"`)}
 	}
 	if _, ok := nc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Network.created_at"`)}
@@ -228,21 +227,21 @@ func (nc *NetworkCreate) createSpec() (*Network, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := nc.mutation.Idx(); ok {
+	if value, ok := nc.mutation.Index(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldIdx,
+			Column: network.FieldIndex,
 		})
-		_node.Idx = value
+		_node.Index = value
 	}
-	if value, ok := nc.mutation.Mtu(); ok {
+	if value, ok := nc.mutation.MTU(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: network.FieldMtu,
+			Column: network.FieldMTU,
 		})
-		_node.Mtu = value
+		_node.MTU = value
 	}
 	if value, ok := nc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -252,17 +251,17 @@ func (nc *NetworkCreate) createSpec() (*Network, *sqlgraph.CreateSpec) {
 		})
 		_node.Name = value
 	}
-	if value, ok := nc.mutation.MAC(); ok {
+	if value, ok := nc.mutation.HardwareAddr(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: network.FieldMAC,
+			Column: network.FieldHardwareAddr,
 		})
-		_node.MAC = value
+		_node.HardwareAddr = value
 	}
 	if value, ok := nc.mutation.Flags(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldFlags,
 		})
@@ -270,7 +269,7 @@ func (nc *NetworkCreate) createSpec() (*Network, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := nc.mutation.Addrs(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
 			Column: network.FieldAddrs,
 		})
@@ -309,7 +308,7 @@ func (nc *NetworkCreate) createSpec() (*Network, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.host_network_id = &nodes[0]
+		_node.host_network = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

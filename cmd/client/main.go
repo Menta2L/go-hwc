@@ -2,7 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/menta2l/go-hwc/internal/conf"
 
@@ -62,7 +65,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	ch := make(chan os.Signal)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
 	done := make(chan struct{}, 1)
-	iWorker.Run(done)
+	go iWorker.Run(done)
+	s := <-ch
+	fmt.Sprintf("Received '%s', exiting...", s.String())
+
 	<-done
 }

@@ -33,44 +33,44 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
-	// EdgeCPUID holds the string denoting the cpu_id edge name in mutations.
-	EdgeCPUID = "cpu_id"
-	// EdgeNetworkID holds the string denoting the network_id edge name in mutations.
-	EdgeNetworkID = "network_id"
-	// EdgeNetstatID holds the string denoting the netstat_id edge name in mutations.
-	EdgeNetstatID = "netstat_id"
-	// EdgeDiskID holds the string denoting the disk_id edge name in mutations.
-	EdgeDiskID = "disk_id"
+	// EdgeCPU holds the string denoting the cpu edge name in mutations.
+	EdgeCPU = "cpu"
+	// EdgeNetwork holds the string denoting the network edge name in mutations.
+	EdgeNetwork = "network"
+	// EdgeNetstat holds the string denoting the netstat edge name in mutations.
+	EdgeNetstat = "netstat"
+	// EdgeDisk holds the string denoting the disk edge name in mutations.
+	EdgeDisk = "disk"
 	// Table holds the table name of the host in the database.
 	Table = "hosts"
-	// CPUIDTable is the table that holds the cpu_id relation/edge.
-	CPUIDTable = "cpus"
-	// CPUIDInverseTable is the table name for the Cpu entity.
+	// CPUTable is the table that holds the cpu relation/edge.
+	CPUTable = "cpus"
+	// CPUInverseTable is the table name for the Cpu entity.
 	// It exists in this package in order to avoid circular dependency with the "cpu" package.
-	CPUIDInverseTable = "cpus"
-	// CPUIDColumn is the table column denoting the cpu_id relation/edge.
-	CPUIDColumn = "host_cpu_id"
-	// NetworkIDTable is the table that holds the network_id relation/edge.
-	NetworkIDTable = "networks"
-	// NetworkIDInverseTable is the table name for the Network entity.
+	CPUInverseTable = "cpus"
+	// CPUColumn is the table column denoting the cpu relation/edge.
+	CPUColumn = "host_cpu"
+	// NetworkTable is the table that holds the network relation/edge.
+	NetworkTable = "networks"
+	// NetworkInverseTable is the table name for the Network entity.
 	// It exists in this package in order to avoid circular dependency with the "network" package.
-	NetworkIDInverseTable = "networks"
-	// NetworkIDColumn is the table column denoting the network_id relation/edge.
-	NetworkIDColumn = "host_network_id"
-	// NetstatIDTable is the table that holds the netstat_id relation/edge.
-	NetstatIDTable = "netstats"
-	// NetstatIDInverseTable is the table name for the Netstat entity.
+	NetworkInverseTable = "networks"
+	// NetworkColumn is the table column denoting the network relation/edge.
+	NetworkColumn = "host_network"
+	// NetstatTable is the table that holds the netstat relation/edge.
+	NetstatTable = "netstats"
+	// NetstatInverseTable is the table name for the Netstat entity.
 	// It exists in this package in order to avoid circular dependency with the "netstat" package.
-	NetstatIDInverseTable = "netstats"
-	// NetstatIDColumn is the table column denoting the netstat_id relation/edge.
-	NetstatIDColumn = "host_netstat_id"
-	// DiskIDTable is the table that holds the disk_id relation/edge.
-	DiskIDTable = "disks"
-	// DiskIDInverseTable is the table name for the Disk entity.
+	NetstatInverseTable = "netstats"
+	// NetstatColumn is the table column denoting the netstat relation/edge.
+	NetstatColumn = "host_netstat"
+	// DiskTable is the table that holds the disk relation/edge.
+	DiskTable = "disks"
+	// DiskInverseTable is the table name for the Disk entity.
 	// It exists in this package in order to avoid circular dependency with the "disk" package.
-	DiskIDInverseTable = "disks"
-	// DiskIDColumn is the table column denoting the disk_id relation/edge.
-	DiskIDColumn = "host_disk_id"
+	DiskInverseTable = "disks"
+	// DiskColumn is the table column denoting the disk relation/edge.
+	DiskColumn = "host_disk"
 )
 
 // Columns holds all SQL columns for host fields.

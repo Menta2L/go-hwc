@@ -448,15 +448,15 @@ func (c *HostClient) GetX(ctx context.Context, id string) *Host {
 	return obj
 }
 
-// QueryCPUID queries the cpu_id edge of a Host.
-func (c *HostClient) QueryCPUID(h *Host) *CPUQuery {
+// QueryCPU queries the cpu edge of a Host.
+func (c *HostClient) QueryCPU(h *Host) *CPUQuery {
 	query := &CPUQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := h.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, id),
 			sqlgraph.To(cpu.Table, cpu.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.CPUIDTable, host.CPUIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.CPUTable, host.CPUColumn),
 		)
 		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
 		return fromV, nil
@@ -464,15 +464,15 @@ func (c *HostClient) QueryCPUID(h *Host) *CPUQuery {
 	return query
 }
 
-// QueryNetworkID queries the network_id edge of a Host.
-func (c *HostClient) QueryNetworkID(h *Host) *NetworkQuery {
+// QueryNetwork queries the network edge of a Host.
+func (c *HostClient) QueryNetwork(h *Host) *NetworkQuery {
 	query := &NetworkQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := h.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, id),
 			sqlgraph.To(network.Table, network.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.NetworkIDTable, host.NetworkIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.NetworkTable, host.NetworkColumn),
 		)
 		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
 		return fromV, nil
@@ -480,15 +480,15 @@ func (c *HostClient) QueryNetworkID(h *Host) *NetworkQuery {
 	return query
 }
 
-// QueryNetstatID queries the netstat_id edge of a Host.
-func (c *HostClient) QueryNetstatID(h *Host) *NetstatQuery {
+// QueryNetstat queries the netstat edge of a Host.
+func (c *HostClient) QueryNetstat(h *Host) *NetstatQuery {
 	query := &NetstatQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := h.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, id),
 			sqlgraph.To(netstat.Table, netstat.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.NetstatIDTable, host.NetstatIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.NetstatTable, host.NetstatColumn),
 		)
 		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
 		return fromV, nil
@@ -496,15 +496,15 @@ func (c *HostClient) QueryNetstatID(h *Host) *NetstatQuery {
 	return query
 }
 
-// QueryDiskID queries the disk_id edge of a Host.
-func (c *HostClient) QueryDiskID(h *Host) *DiskQuery {
+// QueryDisk queries the disk edge of a Host.
+func (c *HostClient) QueryDisk(h *Host) *DiskQuery {
 	query := &DiskQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := h.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(host.Table, host.FieldID, id),
 			sqlgraph.To(disk.Table, disk.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, host.DiskIDTable, host.DiskIDColumn),
+			sqlgraph.Edge(sqlgraph.O2M, false, host.DiskTable, host.DiskColumn),
 		)
 		fromV = sqlgraph.Neighbors(h.driver.Dialect(), step)
 		return fromV, nil

@@ -33,7 +33,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "host" package.
 	HostIDInverseTable = "hosts"
 	// HostIDColumn is the table column denoting the host_id relation/edge.
-	HostIDColumn = "host_netstat_id"
+	HostIDColumn = "host_netstat"
 )
 
 // Columns holds all SQL columns for netstat fields.
@@ -50,7 +50,7 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the "netstats"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
-	"host_netstat_id",
+	"host_netstat",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

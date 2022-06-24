@@ -11,7 +11,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 	"github.com/menta2l/go-hwc/internal/data/ent/disk"
 	"github.com/menta2l/go-hwc/internal/data/ent/host"
 	"github.com/menta2l/go-hwc/internal/data/ent/predicate"
@@ -36,21 +35,27 @@ func (du *DiskUpdate) SetDevice(s string) *DiskUpdate {
 	return du
 }
 
-// SetMount sets the "mount" field.
-func (du *DiskUpdate) SetMount(s string) *DiskUpdate {
-	du.mutation.SetMount(s)
+// SetMountpoint sets the "Mountpoint" field.
+func (du *DiskUpdate) SetMountpoint(s string) *DiskUpdate {
+	du.mutation.SetMountpoint(s)
 	return du
 }
 
-// SetFsType sets the "fs_type" field.
-func (du *DiskUpdate) SetFsType(s string) *DiskUpdate {
-	du.mutation.SetFsType(s)
+// SetFstype sets the "Fstype" field.
+func (du *DiskUpdate) SetFstype(s string) *DiskUpdate {
+	du.mutation.SetFstype(s)
 	return du
 }
 
 // SetOpts sets the "opts" field.
-func (du *DiskUpdate) SetOpts(pa *pgtype.TextArray) *DiskUpdate {
-	du.mutation.SetOpts(pa)
+func (du *DiskUpdate) SetOpts(s []string) *DiskUpdate {
+	du.mutation.SetOpts(s)
+	return du
+}
+
+// ClearOpts clears the value of the "opts" field.
+func (du *DiskUpdate) ClearOpts() *DiskUpdate {
+	du.mutation.ClearOpts()
 	return du
 }
 
@@ -197,24 +202,30 @@ func (du *DiskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: disk.FieldDevice,
 		})
 	}
-	if value, ok := du.mutation.Mount(); ok {
+	if value, ok := du.mutation.Mountpoint(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldMount,
+			Column: disk.FieldMountpoint,
 		})
 	}
-	if value, ok := du.mutation.FsType(); ok {
+	if value, ok := du.mutation.Fstype(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldFsType,
+			Column: disk.FieldFstype,
 		})
 	}
 	if value, ok := du.mutation.Opts(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
+			Column: disk.FieldOpts,
+		})
+	}
+	if du.mutation.OptsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: disk.FieldOpts,
 		})
 	}
@@ -292,21 +303,27 @@ func (duo *DiskUpdateOne) SetDevice(s string) *DiskUpdateOne {
 	return duo
 }
 
-// SetMount sets the "mount" field.
-func (duo *DiskUpdateOne) SetMount(s string) *DiskUpdateOne {
-	duo.mutation.SetMount(s)
+// SetMountpoint sets the "Mountpoint" field.
+func (duo *DiskUpdateOne) SetMountpoint(s string) *DiskUpdateOne {
+	duo.mutation.SetMountpoint(s)
 	return duo
 }
 
-// SetFsType sets the "fs_type" field.
-func (duo *DiskUpdateOne) SetFsType(s string) *DiskUpdateOne {
-	duo.mutation.SetFsType(s)
+// SetFstype sets the "Fstype" field.
+func (duo *DiskUpdateOne) SetFstype(s string) *DiskUpdateOne {
+	duo.mutation.SetFstype(s)
 	return duo
 }
 
 // SetOpts sets the "opts" field.
-func (duo *DiskUpdateOne) SetOpts(pa *pgtype.TextArray) *DiskUpdateOne {
-	duo.mutation.SetOpts(pa)
+func (duo *DiskUpdateOne) SetOpts(s []string) *DiskUpdateOne {
+	duo.mutation.SetOpts(s)
+	return duo
+}
+
+// ClearOpts clears the value of the "opts" field.
+func (duo *DiskUpdateOne) ClearOpts() *DiskUpdateOne {
+	duo.mutation.ClearOpts()
 	return duo
 }
 
@@ -477,24 +494,30 @@ func (duo *DiskUpdateOne) sqlSave(ctx context.Context) (_node *Disk, err error) 
 			Column: disk.FieldDevice,
 		})
 	}
-	if value, ok := duo.mutation.Mount(); ok {
+	if value, ok := duo.mutation.Mountpoint(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldMount,
+			Column: disk.FieldMountpoint,
 		})
 	}
-	if value, ok := duo.mutation.FsType(); ok {
+	if value, ok := duo.mutation.Fstype(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: disk.FieldFsType,
+			Column: disk.FieldFstype,
 		})
 	}
 	if value, ok := duo.mutation.Opts(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
+			Type:   field.TypeJSON,
 			Value:  value,
+			Column: disk.FieldOpts,
+		})
+	}
+	if duo.mutation.OptsCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: disk.FieldOpts,
 		})
 	}
